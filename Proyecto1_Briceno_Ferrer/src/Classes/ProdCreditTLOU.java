@@ -12,7 +12,7 @@ import java.util.concurrent.Semaphore;
  *
  * @author Nicolás Briceño
  */
-public class ProdCreditTLOU {
+public class ProdCreditTLOU extends Thread{
     
     private int dayDuration;
     private double dailyProduce = 4; //Produce 4 créditos al día
@@ -28,6 +28,7 @@ public class ProdCreditTLOU {
         
     }
     
+    @Override
     public void run() {
         while (!stop) {
             try {

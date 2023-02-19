@@ -52,12 +52,19 @@ public class Dashboard extends javax.swing.JFrame {
         //Con el JSON tienen que cambiarse los valores de abajo
         this.dayDuration = 1;
         this.introMaxDriveTLOU = 30;
+        this.creditMaxDriveTLOU = 25;
         
-        //Creando objetos
+        //Creando ProdIntroTLOU
         this.mutexIntroTLOU = new Semaphore(1);
         this.semIntroTLOU = new Semaphore(introMaxDriveTLOU);
         this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU);
         prodIntroTLOU.start();
+        
+        //Creando ProdCreditTLOU
+        this.mutexCreditTLOU = new Semaphore(1);
+        this.semCreditTLOU = new Semaphore(creditMaxDriveTLOU);
+        this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU);
+        prodCreditTLOU.start();
         
     }
 
