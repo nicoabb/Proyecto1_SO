@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.ProdCreditTLOU;
 import Classes.ProdIntroTLOU;
 import java.util.concurrent.Semaphore;
 
@@ -20,6 +21,7 @@ public class Dashboard extends javax.swing.JFrame {
     
     //Espacio en Drive
     public static volatile int introDriveTLOU = 0;
+    public static volatile int creditDriveTLOU = 0;
     
     //Datos del Productor de Intro
     private ProdIntroTLOU prodIntroTLOU;
@@ -28,6 +30,14 @@ public class Dashboard extends javax.swing.JFrame {
     //Semaforos de Productor Intro TLOU
     private Semaphore mutexIntroTLOU;
     private Semaphore semIntroTLOU;
+    
+    //Datos del Productor de Creditos
+    private ProdCreditTLOU prodCreditTLOU;
+    private int creditMaxDriveTLOU;
+    
+    //Semaforos de Productor Intro TLOU
+    private Semaphore mutexCreditTLOU;
+    private Semaphore semCreditTLOU;
     
     //
     /**
@@ -62,33 +72,44 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel2 = new javax.swing.JLabel();
         numIntro = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        numCredit = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setText("Intros:");
+        jLabel2.setText("Créditos:");
+
+        jLabel3.setText("Intros:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(240, Short.MAX_VALUE)
+                .addContainerGap(226, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(161, 161, 161))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40))))
+                    .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(jLabel2)
-                .addGap(27, 27, 27)
-                .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(numIntro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numCredit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         pack();
@@ -131,6 +152,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    public static javax.swing.JLabel numCredit;
     public static javax.swing.JLabel numIntro;
     // End of variables declaration//GEN-END:variables
 }
