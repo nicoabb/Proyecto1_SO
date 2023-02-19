@@ -31,7 +31,7 @@ public class prodCredGOT extends Thread {
         while(!stop) {
                 try {
                     semCred.acquire();
-                    Thread.sleep(24000 / credsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
+                    Thread.sleep(1000 / credsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
                     
                     mutex.acquire();
 

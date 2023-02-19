@@ -5,7 +5,6 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,32 +13,32 @@ import java.util.logging.Logger;
  *
  * @author emilo
  */
-public class prodIntroGOT extends Thread {
+public class prodBegGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop = false;
-    private Semaphore semIntro;
-    private int introsPerDay = 3;
+    private Semaphore semBeg;
+    private double begsPerDay = 0.25;
     
-    public prodIntroGOT(Semaphore mutex, Semaphore semIntro) {
+    public prodBegGOT(Semaphore mutex, Semaphore semBeg) {
         this.mutex = mutex;
-        this.semIntro = semIntro;
+        this.semBeg = semBeg;
     }
     
     @Override
     public void run() {
         while(!stop) {
                 try {
-                    semIntro.acquire();
-                    Thread.sleep(1000 / introsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
+                    semBeg.acquire();
+                    Thread.sleep(Math.round(1000 / begsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
                     
                     mutex.acquire();
-                    
-                    Interfaces.Dashboard.introsProduced++;
-                    Interfaces.Dashboard.cantIntros.setText(Integer.toString(Interfaces.Dashboard.introsProduced));
+
+                    Interfaces.Dashboard.begsProduced++;
+                    Interfaces.Dashboard.cantBegs.setText(Integer.toString(Interfaces.Dashboard.begsProduced));
                     
                     mutex.release();
-//                    semIntro.release();
+//                    semCred.release(); Este
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
