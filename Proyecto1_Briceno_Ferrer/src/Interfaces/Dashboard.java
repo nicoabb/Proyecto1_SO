@@ -5,12 +5,30 @@
  */
 package Interfaces;
 
+import java.util.concurrent.Semaphore;
+
 /**
  *
  * @author Nicolás Briceño
  */
 public class Dashboard extends javax.swing.JFrame {
-
+    
+    private boolean start;
+    private int maxProdsTLOU; //Cantidad máxima de productores TLOU
+    
+    //Espacio en Drive
+    public static volatile int introFreeDriveTLOU = 0;
+    
+    //Datos del Productor de Intro
+    private int introMaxDriveTLOU;
+    public static volatile int numIntrosTLOU;
+    
+    //Semaforos 
+    private Semaphore mutexIntroTLOU;
+    private Semaphore semIntroTLOU;
+    private Semaphore semEnsIntroTLOU;
+    
+    //
     /**
      * Creates new form Dashboard
      */
