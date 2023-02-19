@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.ProdBegTLOU;
 import Classes.ProdCreditTLOU;
 import Classes.ProdIntroTLOU;
 import java.util.concurrent.Semaphore;
@@ -22,24 +23,23 @@ public class Dashboard extends javax.swing.JFrame {
     //Espacio en Drive
     public static volatile int introDriveTLOU = 0;
     public static volatile int creditDriveTLOU = 0;
+    public static volatile int begDriveTLOU = 0;
     
-    //Datos del Productor de Intro
+    //Datos del Productor de Intro TLOU
     private ProdIntroTLOU prodIntroTLOU;
     private int introMaxDriveTLOU;
+    private Semaphore mutexIntroTLOU, semIntroTLOU;
     
-    //Semaforos de Productor Intro TLOU
-    private Semaphore mutexIntroTLOU;
-    private Semaphore semIntroTLOU;
-    
-    //Datos del Productor de Creditos
+    //Datos del Productor de Creditos TLOU
     private ProdCreditTLOU prodCreditTLOU;
     private int creditMaxDriveTLOU;
+    private Semaphore mutexCreditTLOU, semCreditTLOU;
     
-    //Semaforos de Productor Intro TLOU
-    private Semaphore mutexCreditTLOU;
-    private Semaphore semCreditTLOU;
+    //Datos del Productor de Inicio (Beggining) TLOU
+    private ProdBegTLOU prodBegTLOU;
+    private int begMaxDriveTLOU;
+    private Semaphore mutexBegTLOU, semBegTLOU;
     
-    //
     /**
      * Creates new form Dashboard
      */
@@ -78,9 +78,11 @@ public class Dashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        numIntro = new javax.swing.JLabel();
+        numIntroTLOU = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        numCredit = new javax.swing.JLabel();
+        numCreditTLOU = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        numBegTLOU = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,19 +90,23 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel3.setText("Intros:");
 
+        jLabel4.setText("Inicio:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(226, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(numCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numIntroTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numCreditTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numBegTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
@@ -108,15 +114,19 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(numIntro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(numIntroTLOU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 1, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(numCredit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(190, Short.MAX_VALUE))
+                    .addComponent(numCreditTLOU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numBegTLOU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         pack();
@@ -160,7 +170,9 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    public static javax.swing.JLabel numCredit;
-    public static javax.swing.JLabel numIntro;
+    private javax.swing.JLabel jLabel4;
+    public static javax.swing.JLabel numBegTLOU;
+    public static javax.swing.JLabel numCreditTLOU;
+    public static javax.swing.JLabel numIntroTLOU;
     // End of variables declaration//GEN-END:variables
 }

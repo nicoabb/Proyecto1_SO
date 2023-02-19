@@ -38,7 +38,7 @@ public class ProdIntroTLOU extends Thread{
                 mutex.acquire();
                 
                 Dashboard.introDriveTLOU++;
-                Dashboard.numIntro.setText(Integer.toString(Dashboard.introDriveTLOU));
+                Dashboard.numIntroTLOU.setText(Integer.toString(Dashboard.introDriveTLOU));
 
                 mutex.release();
 

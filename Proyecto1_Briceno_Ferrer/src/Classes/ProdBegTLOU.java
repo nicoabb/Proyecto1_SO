@@ -12,19 +12,19 @@ import java.util.concurrent.Semaphore;
  *
  * @author Nicolás Briceño
  */
-public class ProdCreditTLOU extends Thread{
+public class ProdBegTLOU extends Thread{
     
     private int dayDuration;
-    private double dailyProduce = 4; //Produce 4 créditos al día
+    private double dailyProduce = 0.5; //Produce 4 créditos al día
     private Semaphore mutex;
     private Semaphore semPart;
     private boolean stop;
 
-    public ProdCreditTLOU( int dayDuration, Semaphore mutexCredit, Semaphore semCredit) {
+    public ProdBegTLOU( int dayDuration, Semaphore mutexBeg, Semaphore semBeg) {
         this.stop = false;
         this.dayDuration = dayDuration;
-        this.mutex = mutexCredit;
-        this.semPart = semCredit;
+        this.mutex = mutexBeg;
+        this.semPart = semBeg;
         
     }
     
@@ -37,8 +37,8 @@ public class ProdCreditTLOU extends Thread{
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 mutex.acquire();
                 
-                Dashboard.creditDriveTLOU++;
-                Dashboard.numCreditTLOU.setText(Integer.toString(Dashboard.creditDriveTLOU));
+                Dashboard.begDriveTLOU++;
+                Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
 
                 mutex.release();
 
@@ -47,5 +47,4 @@ public class ProdCreditTLOU extends Thread{
             }
         }
     }
-    
 }
