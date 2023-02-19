@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.prodCredGOT;
 import Classes.prodIntroGOT;
 import java.util.concurrent.Semaphore;
 
@@ -16,9 +17,15 @@ public class Dashboard extends javax.swing.JFrame {
 
 //    INTROS GOT
     public static int introsProduced = 0;
-    private prodIntroGOT prodIntro;
+    private prodIntroGOT prodIntroGOT;
     private Semaphore semIntro;
-    private Semaphore semIntroMutex;
+    private Semaphore semIntroMutex; // Semaforo para exclusion mutua en la cantidad de intros
+    
+//  CREDITOS GOT
+    public static int credsProduced = 0;   
+    private prodCredGOT prodCredGOT;
+    private Semaphore semCred;
+    private Semaphore semCredMutex; // Semaforo para exclusion mutua en la cantidad de creditos
     
     /**
      * Creates new form Dashboard
@@ -35,10 +42,14 @@ public class Dashboard extends javax.swing.JFrame {
         //Instanciar al productor de intro
         this.semIntro = new Semaphore(30); // REVISAR ESE 30, tiene que ver con el tamanio del drive
         this.semIntroMutex = new Semaphore(1);
-        this.prodIntro = new prodIntroGOT(semIntroMutex, semIntro);
-        this.prodIntro.start();
+        this.prodIntroGOT = new prodIntroGOT(semIntroMutex, semIntro);
+        this.prodIntroGOT.start();
         
-        //Instanciar 
+        //Instanciar al productor de creditos
+        this.semCred = new Semaphore(25);
+        this.semCredMutex = new Semaphore(1); 
+        this.prodCredGOT = new prodCredGOT(semCredMutex, semCred);
+        this.prodCredGOT.start();
     }
     
 
@@ -54,10 +65,14 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         labelIntro = new javax.swing.JLabel();
         cantIntros = new javax.swing.JLabel();
+        labelCreds = new javax.swing.JLabel();
+        cantCreds = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         labelIntro.setText("Intros producidas:");
+
+        labelCreds.setText("Creditos producidos:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,22 +80,28 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(48, 48, 48)
-                .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelCreds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelIntro, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cantIntros, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cantIntros, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cantCreds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(424, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(116, 116, 116)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cantIntros, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelCreds, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(cantCreds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
-
-        cantIntros.setText(String.valueOf(introsProduced));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,8 +155,10 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JLabel cantCreds;
     public static javax.swing.JLabel cantIntros;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelCreds;
     public static javax.swing.JLabel labelIntro;
     // End of variables declaration//GEN-END:variables
 }

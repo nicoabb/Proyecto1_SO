@@ -14,32 +14,32 @@ import java.util.logging.Logger;
  *
  * @author emilo
  */
-public class prodIntroGOT extends Thread {
+public class prodCredGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop = false;
-    private Semaphore semIntro;
-    private int introsPerDay = 3;
+    private Semaphore semCred;
+    private int credsPerDay = 3;
     
-    public prodIntroGOT(Semaphore mutex, Semaphore semIntro) {
+    public prodCredGOT(Semaphore mutex, Semaphore semCred) {
         this.mutex = mutex;
-        this.semIntro = semIntro;
+        this.semCred = semCred;
     }
     
     @Override
     public void run() {
         while(!stop) {
                 try {
-                    semIntro.acquire();
-                    Thread.sleep(24000 / introsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
+                    semCred.acquire();
+                    Thread.sleep(24000 / credsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
                     
                     mutex.acquire();
-                    
-                    Interfaces.Dashboard.introsProduced++;
-                    Interfaces.Dashboard.cantIntros.setText(Integer.toString(Interfaces.Dashboard.introsProduced));
+
+                    Interfaces.Dashboard.credsProduced++;
+                    Interfaces.Dashboard.cantCreds.setText(Integer.toString(Interfaces.Dashboard.credsProduced));
                     
                     mutex.release();
-//                    semIntro.release();
+//                    semCred.release(); Este
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -43,9 +43,15 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-                  <Component id="labelIntro" min="-2" pref="111" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="labelCreds" max="32767" attributes="0"/>
+                      <Component id="labelIntro" pref="111" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cantIntros" min="-2" pref="111" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cantIntros" min="-2" pref="111" max="-2" attributes="0"/>
+                      <Component id="cantCreds" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace pref="424" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -54,11 +60,16 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cantIntros" min="-2" pref="39" max="-2" attributes="0"/>
                       <Component id="labelIntro" min="-2" pref="39" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="145" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="labelCreds" pref="39" max="32767" attributes="0"/>
+                      <Component id="cantCreds" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="94" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -74,7 +85,16 @@
         </Component>
         <Component class="javax.swing.JLabel" name="cantIntros">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="cantIntros.setText(String.valueOf(introsProduced));"/>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelCreds">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Creditos producidos:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="cantCreds">
+          <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
           </AuxValues>
         </Component>
