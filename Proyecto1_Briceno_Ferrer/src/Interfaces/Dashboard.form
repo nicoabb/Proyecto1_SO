@@ -26,6 +26,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace pref="226" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -35,6 +36,7 @@
                   <Component id="numIntroTLOU" min="-2" pref="121" max="-2" attributes="0"/>
                   <Component id="numCreditTLOU" min="-2" pref="121" max="-2" attributes="0"/>
                   <Component id="numBegTLOU" min="-2" pref="121" max="-2" attributes="0"/>
+                  <Component id="numEndTLOU" min="-2" pref="121" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
           </Group>
@@ -61,7 +63,12 @@
                   <Component id="jLabel4" min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="numBegTLOU" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="160" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel5" min="-2" pref="26" max="-2" attributes="0"/>
+                  <Component id="numEndTLOU" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace pref="128" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -93,6 +100,16 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="numBegTLOU">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cierre:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="numEndTLOU">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
       </AuxValues>

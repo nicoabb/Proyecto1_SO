@@ -12,19 +12,19 @@ import java.util.concurrent.Semaphore;
  *
  * @author Nicolás Briceño
  */
-public class ProdBegTLOU extends Thread{
+public class ProdEndTLOU extends Thread{
     
     private int dayDuration;
-    private double dailyProduce = 0.5; //Produce 1 inicio cada 2 días
+    private double dailyProduce = 0.25; //Produce 1 cierre cada 4 días
     private Semaphore mutex;
     private Semaphore semPart;
     private boolean stop;
 
-    public ProdBegTLOU( int dayDuration, Semaphore mutexBeg, Semaphore semBeg) {
+    public ProdEndTLOU( int dayDuration, Semaphore mutexEnd, Semaphore semEnd) {
         this.stop = false;
         this.dayDuration = dayDuration;
-        this.mutex = mutexBeg;
-        this.semPart = semBeg;
+        this.mutex = mutexEnd;
+        this.semPart = semEnd;
         
     }
     
@@ -37,8 +37,8 @@ public class ProdBegTLOU extends Thread{
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 mutex.acquire();
                 
-                Dashboard.begDriveTLOU++;
-                Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
+                Dashboard.endDriveTLOU++;
+                Dashboard.numEndTLOU.setText(Integer.toString(Dashboard.endDriveTLOU));
 
                 mutex.release();
 

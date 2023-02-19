@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.ProdEndTLOU;
 import Classes.ProdBegTLOU;
 import Classes.ProdCreditTLOU;
 import Classes.ProdIntroTLOU;
@@ -24,6 +25,7 @@ public class Dashboard extends javax.swing.JFrame {
     public static volatile int introDriveTLOU = 0;
     public static volatile int creditDriveTLOU = 0;
     public static volatile int begDriveTLOU = 0;
+    public static volatile int endDriveTLOU = 0;
     
     //Datos del Productor de Intro TLOU
     private ProdIntroTLOU prodIntroTLOU;
@@ -40,6 +42,11 @@ public class Dashboard extends javax.swing.JFrame {
     private int begMaxDriveTLOU;
     private Semaphore mutexBegTLOU, semBegTLOU;
     
+    //Datos del Productor de Cierre (End) TLOU
+    private ProdEndTLOU prodEndTLOU;
+    private int endMaxDriveTLOU;
+    private Semaphore mutexEndTLOU, semEndTLOU;
+    
     /**
      * Creates new form Dashboard
      */
@@ -53,6 +60,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.dayDuration = 1;
         this.introMaxDriveTLOU = 30;
         this.creditMaxDriveTLOU = 25;
+        this.begMaxDriveTLOU = 50;
+        this.endMaxDriveTLOU = 55;
         
         //Creando ProdIntroTLOU
         this.mutexIntroTLOU = new Semaphore(1);
@@ -66,6 +75,17 @@ public class Dashboard extends javax.swing.JFrame {
         this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU);
         prodCreditTLOU.start();
         
+        //Creando ProdBegTLOU
+        this.mutexBegTLOU = new Semaphore(1);
+        this.semBegTLOU = new Semaphore(begMaxDriveTLOU);
+        this.prodBegTLOU = new ProdBegTLOU(dayDuration, mutexBegTLOU, semBegTLOU);
+        prodBegTLOU.start();
+        
+        //Creando ProdEndTLOU
+        this.mutexEndTLOU = new Semaphore(1);
+        this.semEndTLOU = new Semaphore(endMaxDriveTLOU);
+        this.prodEndTLOU = new ProdEndTLOU(dayDuration, mutexEndTLOU, semEndTLOU);
+        prodEndTLOU.start();
     }
 
     /**
@@ -83,6 +103,8 @@ public class Dashboard extends javax.swing.JFrame {
         numCreditTLOU = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         numBegTLOU = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        numEndTLOU = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,6 +114,8 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel4.setText("Inicio:");
 
+        jLabel5.setText("Cierre:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,6 +123,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(226, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
                     .addComponent(jLabel4)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))
@@ -106,7 +131,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(numIntroTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numCreditTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(numBegTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numBegTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numEndTLOU, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
@@ -126,7 +152,11 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numBegTLOU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numEndTLOU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         pack();
@@ -171,8 +201,10 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     public static javax.swing.JLabel numBegTLOU;
     public static javax.swing.JLabel numCreditTLOU;
+    public static javax.swing.JLabel numEndTLOU;
     public static javax.swing.JLabel numIntroTLOU;
     // End of variables declaration//GEN-END:variables
 }
