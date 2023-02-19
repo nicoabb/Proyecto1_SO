@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.ProdIntroTLOU;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -14,19 +15,19 @@ import java.util.concurrent.Semaphore;
 public class Dashboard extends javax.swing.JFrame {
     
     private boolean start;
+    private int dayDuration;
     private int maxProdsTLOU; //Cantidad máxima de productores TLOU
     
     //Espacio en Drive
-    public static volatile int introFreeDriveTLOU = 0;
+    public static volatile int introDriveTLOU = 0;
     
     //Datos del Productor de Intro
+    private ProdIntroTLOU prodIntroTLOU;
     private int introMaxDriveTLOU;
-    public static volatile int numIntrosTLOU;
     
-    //Semaforos 
+    //Semaforos de Productor Intro TLOU
     private Semaphore mutexIntroTLOU;
     private Semaphore semIntroTLOU;
-    private Semaphore semEnsIntroTLOU;
     
     //
     /**
@@ -34,6 +35,20 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        inicializarTLOU();
+    }
+    
+    public void inicializarTLOU() {
+        //Con el JSON tienen que cambiarse los valores de abajo
+        this.dayDuration = 1;
+        this.introMaxDriveTLOU = 30;
+        
+        //Creando objetos
+        this.mutexIntroTLOU = new Semaphore(1);
+        this.semIntroTLOU = new Semaphore(introMaxDriveTLOU);
+        this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU);
+        prodIntroTLOU.start();
+        
     }
 
     /**
@@ -45,17 +60,35 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel2 = new javax.swing.JLabel();
+        numIntro = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel2.setText("Intros:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(240, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(161, 161, 161))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(jLabel2)
+                .addGap(27, 27, 27)
+                .addComponent(numIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         pack();
@@ -97,5 +130,7 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel2;
+    public static javax.swing.JLabel numIntro;
     // End of variables declaration//GEN-END:variables
 }
