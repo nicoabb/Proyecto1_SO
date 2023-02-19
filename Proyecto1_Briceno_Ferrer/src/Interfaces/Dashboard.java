@@ -5,18 +5,42 @@
  */
 package Interfaces;
 
+import Classes.prodIntroGOT;
+import java.util.concurrent.Semaphore;
+
 /**
  *
  * @author Nicolás Briceño
  */
 public class Dashboard extends javax.swing.JFrame {
 
+//    INTROS GOT
+    public static int introsProduced = 0;
+    private prodIntroGOT prodIntro;
+    private Semaphore semIntro;
+    private Semaphore semIntroMutex;
+    
     /**
      * Creates new form Dashboard
      */
+    
     public Dashboard() {
         initComponents();
+        instantiate();
+
     }
+    
+    public void instantiate() {
+        
+        //Instanciar al productor de intro
+        this.semIntro = new Semaphore(30); // REVISAR ESE 30, tiene que ver con el tamanio del drive
+        this.semIntroMutex = new Semaphore(1);
+        this.prodIntro = new prodIntroGOT(semIntroMutex, semIntro);
+        this.prodIntro.start();
+        
+        //Instanciar 
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,17 +51,48 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        labelIntro = new javax.swing.JLabel();
+        cantIntros = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        labelIntro.setText("Intros producidas:");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cantIntros, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(424, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(116, 116, 116)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cantIntros, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(145, Short.MAX_VALUE))
+        );
+
+        cantIntros.setText(String.valueOf(introsProduced));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -79,5 +134,8 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JLabel cantIntros;
+    private javax.swing.JPanel jPanel1;
+    public static javax.swing.JLabel labelIntro;
     // End of variables declaration//GEN-END:variables
 }
