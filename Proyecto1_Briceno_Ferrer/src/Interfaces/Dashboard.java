@@ -70,7 +70,7 @@ public class Dashboard extends javax.swing.JFrame {
     
     public void inicializarTLOU() {
         //Con el JSON tienen que cambiarse los valores de abajo
-        this.dayDuration = 1;
+        this.dayDuration = 2;
         this.introMaxDriveTLOU = 30;
         this.creditMaxDriveTLOU = 25;
         this.begMaxDriveTLOU = 50;

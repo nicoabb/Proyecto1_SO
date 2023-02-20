@@ -69,39 +69,38 @@ public class AssemblerTLOU extends Thread{
     public void run(){
         while(!stop){
             try{
-
                 //Entrar a los Drives de cada parte
                 semAssemIntro.acquire(numIntro);
                 semAssemBeg.acquire(numBeg);
                 semAssemEnd.acquire(numEnd);
+                semAssemPlot.acquire(numPlot);
+                semAssemCredit.acquire(numCredit);
 
                 //Retirar intro para el capítulo
-                mutexIntro.acquire(numIntro);
+                mutexIntro.acquire();
                 Dashboard.introDriveTLOU -= numIntro;
                 Dashboard.numIntroTLOU.setText(Integer.toString(Dashboard.introDriveTLOU));
                 mutexIntro.release();
                 semIntro.release(numIntro);
 
                 //Retirar inicios (begginings) para el capítulo
-                mutexBeg.acquire(numBeg);
+                mutexBeg.acquire(); 
                 Dashboard.begDriveTLOU -= numBeg;
                 Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
                 mutexBeg.release();
                 semBeg.release(numBeg);
 
                 //Retirar cierres (end) para el capítulo
-                mutexEnd.acquire(numEnd);
+                mutexEnd.acquire();
                 Dashboard.endDriveTLOU -= numEnd;
                 Dashboard.numEndTLOU.setText(Integer.toString(Dashboard.endDriveTLOU));
                 mutexEnd.release();
                 semEnd.release(numEnd);
-
-                if ((Dashboard.chaptersTLOU % 5) == 0) { //Cada 5 capítulos usar Plot Twist
+                
+                if (Dashboard.chaptersTLOU > 0 && ((Dashboard.chaptersTLOU % 5) == 0)) { //Cada 5 capítulos usar Plot Twist
                     
-                    semAssemPlot.acquire(numPlot);
-
                     //Retirar Plot twist para el capítulo
-                    mutexPlot.acquire(numPlot);
+                    mutexPlot.acquire();
                     Dashboard.plotDriveTLOU -= numPlot;
                     Dashboard.numPlotTLOU.setText(Integer.toString(Dashboard.plotDriveTLOU));
                     mutexPlot.release();
@@ -109,10 +108,8 @@ public class AssemblerTLOU extends Thread{
 
                 }else {
 
-                    semAssemCredit.acquire(numCredit);
-
                     //Retirar creditos para el capítulo
-                    mutexCredit.acquire(numCredit);
+                    mutexCredit.acquire();
                     Dashboard.creditDriveTLOU -= numCredit;
                     Dashboard.numCreditTLOU.setText(Integer.toString(Dashboard.creditDriveTLOU));
                     mutexCredit.release();
