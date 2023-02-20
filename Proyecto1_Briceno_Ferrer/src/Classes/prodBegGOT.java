@@ -30,12 +30,12 @@ public class prodBegGOT extends Thread {
         while(!stop) {
                 try {
                     semBeg.acquire();
-                    Thread.sleep(Math.round(1000 / begsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
+                    Thread.sleep(Math.round(1000 / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
                     
                     mutex.acquire();
 
-                    Interfaces.Dashboard.begsProduced++;
-                    Interfaces.Dashboard.cantBegs.setText(Integer.toString(Interfaces.Dashboard.begsProduced));
+                    Interfaces.Dashboard.begsProducedGOT++;
+                    Interfaces.Dashboard.cantBegsGOT.setText(Integer.toString(Interfaces.Dashboard.begsProducedGOT));
                     
                     mutex.release();
 //                    semCred.release(); Este

@@ -31,12 +31,12 @@ public class prodIntroGOT extends Thread {
         while(!stop) {
                 try {
                     semIntro.acquire();
-                    Thread.sleep(1000 / introsPerDay); // Aqui espera 8 horas (que le toma hacer una intro) y luego 
+                    Thread.sleep(1000 / introsPerDay); // Aqui espera 8 horas (que le toma hacer una intro)
                     
                     mutex.acquire();
                     
-                    Interfaces.Dashboard.introsProduced++;
-                    Interfaces.Dashboard.cantIntros.setText(Integer.toString(Interfaces.Dashboard.introsProduced));
+                    Interfaces.Dashboard.introsProducedGOT++;
+                    Interfaces.Dashboard.cantIntrosGOT.setText(Integer.toString(Interfaces.Dashboard.introsProducedGOT));
                     
                     mutex.release();
 //                    semIntro.release();

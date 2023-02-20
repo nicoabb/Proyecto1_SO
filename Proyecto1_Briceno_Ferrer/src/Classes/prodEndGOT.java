@@ -5,7 +5,6 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,29 +13,29 @@ import java.util.logging.Logger;
  *
  * @author emilo
  */
-public class prodCredGOT extends Thread {
+public class prodEndGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop = false;
-    private Semaphore semCred;
-    private int credsPerDay = 3;
+    private Semaphore semEnd;
+    private double endsPerDay = 0.33333;
     
-    public prodCredGOT(Semaphore mutex, Semaphore semCred) {
+    public prodEndGOT(Semaphore mutex, Semaphore semEnd) {
         this.mutex = mutex;
-        this.semCred = semCred;
+        this.semEnd = semEnd;
     }
     
     @Override
     public void run() {
         while(!stop) {
                 try {
-                    semCred.acquire();
-                    Thread.sleep(1000 / credsPerDay); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
+                    semEnd.acquire();
                     
+                    Thread.sleep(Math.round(1000 / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
-                    Interfaces.Dashboard.credsProducedGOT++;
-                    Interfaces.Dashboard.cantCredsGOT.setText(Integer.toString(Interfaces.Dashboard.credsProducedGOT));
+                    Interfaces.Dashboard.endsProducedGOT++;
+                    Interfaces.Dashboard.cantEndsGOT.setText(Integer.toString(Interfaces.Dashboard.endsProducedGOT));
                     
                     mutex.release();
 //                    semCred.release(); Este
