@@ -16,16 +16,15 @@ public class ProdBegTLOU extends Thread{
     
     private int dayDuration;
     private double dailyProduce = 0.5; //Produce 1 inicio cada 2 días
-    private Semaphore mutex;
-    private Semaphore semPart;
+    private Semaphore mutex, semPart, semAssembler;
     private boolean stop;
 
-    public ProdBegTLOU( int dayDuration, Semaphore mutexBeg, Semaphore semBeg) {
+    public ProdBegTLOU( int dayDuration, Semaphore mutexBeg, Semaphore semBeg, Semaphore semAssemBeg) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexBeg;
         this.semPart = semBeg;
-        
+        this.semAssembler = semAssemBeg;
     }
     
     @Override
@@ -41,6 +40,7 @@ public class ProdBegTLOU extends Thread{
                 Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
 
                 mutex.release();
+                semAssembler.release();
 
             } catch (Exception e) {
 

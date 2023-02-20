@@ -16,15 +16,15 @@ public class ProdEndTLOU extends Thread{
     
     private int dayDuration;
     private double dailyProduce = 0.25; //Produce 1 cierre cada 4 días
-    private Semaphore mutex;
-    private Semaphore semPart;
+    private Semaphore mutex, semPart, semAssembler;
     private boolean stop;
 
-    public ProdEndTLOU( int dayDuration, Semaphore mutexEnd, Semaphore semEnd) {
+    public ProdEndTLOU( int dayDuration, Semaphore mutexEnd, Semaphore semEnd, Semaphore semAssemEnd) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexEnd;
         this.semPart = semEnd;
+        this.semAssembler = semAssemEnd;
         
     }
     
@@ -41,6 +41,7 @@ public class ProdEndTLOU extends Thread{
                 Dashboard.numEndTLOU.setText(Integer.toString(Dashboard.endDriveTLOU));
 
                 mutex.release();
+                semAssembler.release();
 
             } catch (Exception e) {
 

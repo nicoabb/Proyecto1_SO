@@ -15,15 +15,15 @@ import java.util.concurrent.Semaphore;
 public class ProdPlotTLOU extends Thread{
      private int dayDuration;
     private double dailyProduce = 0.5; //Produce 1 cierre cada 4 días
-    private Semaphore mutex;
-    private Semaphore semPart;
+    private Semaphore mutex, semPart, semAssembler;
     private boolean stop;
 
-    public ProdPlotTLOU( int dayDuration, Semaphore mutexPlot, Semaphore semPlot) {
+    public ProdPlotTLOU( int dayDuration, Semaphore mutexPlot, Semaphore semPlot, Semaphore semAssemPlot) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexPlot;
         this.semPart = semPlot;
+        this.semAssembler = semAssemPlot;
         
     }
     
@@ -40,6 +40,7 @@ public class ProdPlotTLOU extends Thread{
                 Dashboard.numPlotTLOU.setText(Integer.toString(Dashboard.plotDriveTLOU));
 
                 mutex.release();
+                semAssembler.release();
 
             } catch (Exception e) {
 

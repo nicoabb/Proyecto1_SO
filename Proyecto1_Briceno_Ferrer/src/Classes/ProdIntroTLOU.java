@@ -16,15 +16,15 @@ public class ProdIntroTLOU extends Thread{
     
     private int dayDuration;
     private double dailyProduce = 1; //Produce 1 intro al día
-    private Semaphore mutex;
-    private Semaphore semPart;
+    private Semaphore mutex, semPart, semAssembler;
     private boolean stop;
 
-    public ProdIntroTLOU( int dayDuration, Semaphore mutexIntro, Semaphore semIntro) {
+    public ProdIntroTLOU( int dayDuration, Semaphore mutexIntro, Semaphore semIntro, Semaphore semAssemIntro) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexIntro;
         this.semPart = semIntro;
+        semAssembler = semAssemIntro;
         
     }
     
@@ -41,6 +41,7 @@ public class ProdIntroTLOU extends Thread{
                 Dashboard.numIntroTLOU.setText(Integer.toString(Dashboard.introDriveTLOU));
 
                 mutex.release();
+                semAssembler.release();
 
             } catch (Exception e) {
 

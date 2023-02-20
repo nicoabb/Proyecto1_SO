@@ -34,27 +34,27 @@ public class Dashboard extends javax.swing.JFrame {
     //Datos del Productor de Intro TLOU
     private ProdIntroTLOU prodIntroTLOU;
     private int introMaxDriveTLOU;
-    private Semaphore mutexIntroTLOU, semIntroTLOU;
+    private Semaphore mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU;
     
     //Datos del Productor de Creditos TLOU
     private ProdCreditTLOU prodCreditTLOU;
     private int creditMaxDriveTLOU;
-    private Semaphore mutexCreditTLOU, semCreditTLOU;
+    private Semaphore mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU;
     
     //Datos del Productor de Inicio (Beggining) TLOU
     private ProdBegTLOU prodBegTLOU;
     private int begMaxDriveTLOU;
-    private Semaphore mutexBegTLOU, semBegTLOU;
+    private Semaphore mutexBegTLOU, semBegTLOU, semAssemBegTLOU;
     
     //Datos del Productor de Cierre (End) TLOU
     private ProdEndTLOU prodEndTLOU;
     private int endMaxDriveTLOU;
-    private Semaphore mutexEndTLOU, semEndTLOU;
+    private Semaphore mutexEndTLOU, semEndTLOU, semAssemEndTLOU;
     
     //Datos del Productor de Plot (Plot Twist) TLOU
     private ProdPlotTLOU prodPlotTLOU;
     private int plotMaxDriveTLOU;
-    private Semaphore mutexPlotTLOU, semPlotTLOU;
+    private Semaphore mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU;
     
     //Datos del Ensamblador TLOU
     private AssemblerTLOU assemblerTLOU;
@@ -80,36 +80,41 @@ public class Dashboard extends javax.swing.JFrame {
         //Creando ProdIntroTLOU
         this.mutexIntroTLOU = new Semaphore(1);
         this.semIntroTLOU = new Semaphore(introMaxDriveTLOU);
-        this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU);
+        this.semAssemIntroTLOU = new Semaphore(0);
+        this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
         prodIntroTLOU.start();
         
         //Creando ProdCreditTLOU
         this.mutexCreditTLOU = new Semaphore(1);
         this.semCreditTLOU = new Semaphore(creditMaxDriveTLOU);
-        this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU);
+        this.semAssemCreditTLOU = new Semaphore(0);
+        this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
         prodCreditTLOU.start();
         
         //Creando ProdBegTLOU
         this.mutexBegTLOU = new Semaphore(1);
         this.semBegTLOU = new Semaphore(begMaxDriveTLOU);
-        this.prodBegTLOU = new ProdBegTLOU(dayDuration, mutexBegTLOU, semBegTLOU);
+        this.semAssemBegTLOU = new Semaphore(0);
+        this.prodBegTLOU = new ProdBegTLOU(dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
         prodBegTLOU.start();
         
         //Creando ProdEndTLOU
         this.mutexEndTLOU = new Semaphore(1);
         this.semEndTLOU = new Semaphore(endMaxDriveTLOU);
-        this.prodEndTLOU = new ProdEndTLOU(dayDuration, mutexEndTLOU, semEndTLOU);
+        this.semAssemEndTLOU = new Semaphore(0);
+        this.prodEndTLOU = new ProdEndTLOU(dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
         prodEndTLOU.start();
         
         //Creando ProdPlotTLOU
         this.mutexPlotTLOU = new Semaphore(1);
         this.semPlotTLOU = new Semaphore(plotMaxDriveTLOU);
-        this.prodPlotTLOU = new ProdPlotTLOU(dayDuration, mutexPlotTLOU, semPlotTLOU);
+        this.semAssemPlotTLOU = new Semaphore(0);
+        this.prodPlotTLOU = new ProdPlotTLOU(dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
         prodPlotTLOU.start();
         
         //Creando Ensamblador TLOU
         this.mutexAssembler = new Semaphore(1);
-        this.assemblerTLOU = new AssemblerTLOU(dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, mutexBegTLOU, semBegTLOU, mutexEndTLOU, semEndTLOU, mutexCreditTLOU, semCreditTLOU, mutexPlotTLOU, semPlotTLOU);
+        this.assemblerTLOU = new AssemblerTLOU(dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
         assemblerTLOU.start();
     }
 

@@ -16,16 +16,15 @@ public class ProdCreditTLOU extends Thread{
     
     private int dayDuration;
     private double dailyProduce = 4; //Produce 4 créditos al día
-    private Semaphore mutex;
-    private Semaphore semPart;
+    private Semaphore mutex, semPart, semAssembler;
     private boolean stop;
 
-    public ProdCreditTLOU( int dayDuration, Semaphore mutexCredit, Semaphore semCredit) {
+    public ProdCreditTLOU( int dayDuration, Semaphore mutexCredit, Semaphore semCredit, Semaphore semAssemCredit) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexCredit;
         this.semPart = semCredit;
-        
+        this.semAssembler = semAssemCredit;
     }
     
     @Override
@@ -41,6 +40,7 @@ public class ProdCreditTLOU extends Thread{
                 Dashboard.numCreditTLOU.setText(Integer.toString(Dashboard.creditDriveTLOU));
 
                 mutex.release();
+                semAssembler.release();
 
             } catch (Exception e) {
 
