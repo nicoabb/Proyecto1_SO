@@ -5,6 +5,7 @@
  */
 package Classes;
 
+import Interfaces.Dashboard;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -26,42 +27,103 @@ public class AssemblerTLOU extends Thread{
 
     private Semaphore mutexIntro;
     private Semaphore semIntro; //Productor
-    private Semaphore semEnsIntro; //Consumidor
+    //private Semaphore semEnsIntro; //Consumidor
 
     private Semaphore mutexBeg; 
     private Semaphore semBeg; //Productor
-    private Semaphore semEnsBeg; //Consumidor
+    //private Semaphore semEnsBeg; //Consumidor
 
     private Semaphore mutexEnd;
     private Semaphore semEnd; //Productor
-    private Semaphore semEnsEnd; //Consumidor
+    //private Semaphore semEnsEnd; //Consumidor
     
     private Semaphore mutexCredit;
     private Semaphore semCredit; //Productor
-    private Semaphore semEnsCredit; //Consumidor
+    //private Semaphore semEnsCredit; //Consumidor
     
     private Semaphore mutexPlot;
     private Semaphore semPlot; //Productor
-    private Semaphore semEnsPlot; //Consumidor
+    //private Semaphore semEnsPlot; //Consumidor
 
-    public AssemblerTLOU(int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore semEnsIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore semEnsBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore semEnsEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore semEnsCredit, Semaphore mutexPlot, Semaphore semPlot, Semaphore semEnsPlot) {
+    public AssemblerTLOU(int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore mutexPlot, Semaphore semPlot) {
         this.dayDuration = dayDuration;
         this.mutexAssembler = mutexAssembler;
         this.mutexIntro = mutexIntro;
         this.semIntro = semIntro;
-        this.semEnsIntro = semEnsIntro;
+        //this.semEnsIntro = semEnsIntro;
         this.mutexBeg = mutexBeg;
         this.semBeg = semBeg;
-        this.semEnsBeg = semEnsBeg;
+        //this.semEnsBeg = semEnsBeg;
         this.mutexEnd = mutexEnd;
         this.semEnd = semEnd;
-        this.semEnsEnd = semEnsEnd;
+        //this.semEnsEnd = semEnsEnd;
         this.mutexCredit = mutexCredit;
         this.semCredit = semCredit;
-        this.semEnsCredit = semEnsCredit;
+        //this.semEnsCredit = semEnsCredit;
         this.mutexPlot = mutexPlot;
         this.semPlot = semPlot;
-        this.semEnsPlot = semEnsPlot;
+        //this.semEnsPlot = semEnsPlot;
     }
     
+    @Override
+    public void run(){
+        
+        while(true){
+            if (!this.stop) {
+                try{
+                    
+                    //Retirar intro para el capítulo
+                    mutexIntro.acquire(numIntro);
+                    Dashboard.introDriveTLOU -= numIntro;
+                    Dashboard.numChapters.setText(Integer.toString(Dashboard.introDriveTLOU));
+                    mutexIntro.release();
+                    semIntro.release(numIntro);
+                    
+                    //Retirar inicios (begginings) para el capítulo
+                    mutexBeg.acquire(numBeg);
+                    Dashboard.begDriveTLOU -= numBeg;
+                    Dashboard.numChapters.setText(Integer.toString(Dashboard.begDriveTLOU));
+                    mutexBeg.release();
+                    semBeg.release(numBeg);
+                    
+                    //Retirar cierres (end) para el capítulo
+                    mutexEnd.acquire(numEnd);
+                    Dashboard.endDriveTLOU -= numEnd;
+                    Dashboard.numChapters.setText(Integer.toString(Dashboard.endDriveTLOU));
+                    mutexEnd.release();
+                    semEnd.release(numEnd);
+                    
+                    if ((Dashboard.chaptersTLOU % 5) == 0) { //Cada 5 capítulos usar Plot Twist
+                        
+                        //Retirar Plot twist para el capítulo
+                        mutexPlot.acquire(numPlot);
+                        Dashboard.plotDriveTLOU -= numPlot;
+                        Dashboard.numChapters.setText(Integer.toString(Dashboard.plotDriveTLOU));
+                        mutexPlot.release();
+                        semPlot.release(numPlot);
+                        
+}                   else {
+                        
+                        //Retirar creditos para el capítulo
+                        mutexCredit.acquire(numCredit);
+                        Dashboard.creditDriveTLOU -= numCredit;
+                        Dashboard.numChapters.setText(Integer.toString(Dashboard.creditDriveTLOU));
+                        mutexCredit.release();
+                        semCredit.release(numCredit);
+                        
+                    }
+                    
+                    //Aumentar número de capítulos ensamblados
+                    mutexAssembler.acquire();
+                    Dashboard.chaptersTLOU += 1;
+                    Dashboard.numChapters.setText(Integer.toString(Dashboard.chaptersTLOU));
+                    mutexCredit.release();
+                    
+                }catch(Exception e){
+
+                }
+    
+            }
+        }
+    }
 }
