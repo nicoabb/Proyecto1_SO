@@ -38,7 +38,7 @@ public class prodIntroGOT extends Thread {
                     mutex.acquire();
                     
                     Interfaces.Dashboard.introsProducedGOT++;
-                    Interfaces.Dashboard.cantIntrosGOT.setText(Integer.toString(Interfaces.Dashboard.introsProducedGOT));
+                    Interfaces.Dashboard.qtyIntrosGOT.setText(Integer.toString(Interfaces.Dashboard.introsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

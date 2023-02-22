@@ -37,7 +37,7 @@ public class prodPlotGOT extends Thread {
                     mutex.acquire();
 
                     Interfaces.Dashboard.plotsProducedGOT++;
-                    Interfaces.Dashboard.cantPlotsGOT.setText(Integer.toString(Interfaces.Dashboard.plotsProducedGOT));
+                    Interfaces.Dashboard.qtyPlotsGOT.setText(Integer.toString(Interfaces.Dashboard.plotsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

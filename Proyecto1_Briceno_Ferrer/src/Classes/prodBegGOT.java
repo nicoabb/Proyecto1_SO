@@ -38,7 +38,7 @@ public class prodBegGOT extends Thread {
                     mutex.acquire();
 
                     Interfaces.Dashboard.begsProducedGOT++;
-                    Interfaces.Dashboard.cantBegsGOT.setText(Integer.toString(Interfaces.Dashboard.begsProducedGOT));
+                    Interfaces.Dashboard.qtyBegsGOT.setText(Integer.toString(Interfaces.Dashboard.begsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

@@ -37,7 +37,7 @@ public class prodEndGOT extends Thread {
                     mutex.acquire();
 
                     Interfaces.Dashboard.endsProducedGOT++;
-                    Interfaces.Dashboard.cantEndsGOT.setText(Integer.toString(Interfaces.Dashboard.endsProducedGOT));
+                    Interfaces.Dashboard.qtyEndsGOT.setText(Integer.toString(Interfaces.Dashboard.endsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

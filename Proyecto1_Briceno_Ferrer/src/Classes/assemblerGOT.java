@@ -106,21 +106,21 @@ public class assemblerGOT extends Thread {
                 // Intros
                 semIntroMutexGOT.acquire(); // Entro en CS de Intro
                 Dashboard.introsProducedGOT -= cantIntrosGOT;
-                Dashboard.cantIntrosGOT.setText(Integer.toString(Dashboard.introsProducedGOT));
+                Dashboard.qtyIntrosGOT.setText(Integer.toString(Dashboard.introsProducedGOT));
                 semIntroMutexGOT.release(); // Salgo de CS de Intro
                 semIntroGOT.release(cantIntrosGOT);
 
                 // Beginnings
                 semBegMutexGOT.acquire(); // Entro en CS de Beginnings
                 Dashboard.begsProducedGOT -= cantBegsGOT;
-                Dashboard.cantBegsGOT.setText(Integer.toString(Dashboard.begsProducedGOT));
+                Dashboard.qtyBegsGOT.setText(Integer.toString(Dashboard.begsProducedGOT));
                 semBegMutexGOT.release();
                 semBegGOT.release(cantBegsGOT);
 
                 // Credits
                 semCredMutexGOT.acquire(); // Entro en CS de Endings
                 Dashboard.credsProducedGOT -= cantCredsGOT;
-                Dashboard.cantCredsGOT.setText(Integer.toString(Dashboard.credsProducedGOT));
+                Dashboard.qtyCredsGOT.setText(Integer.toString(Dashboard.credsProducedGOT));
                 semCredMutexGOT.release();
                 semCredGOT.release(cantCredsGOT);
 
@@ -128,14 +128,14 @@ public class assemblerGOT extends Thread {
                     // Plot twists
                     semPlotMutexGOT.acquire();
                     Dashboard.plotsProducedGOT -= cantPlotsGOT;
-                    Dashboard.cantPlotsGOT.setText(Integer.toString(Dashboard.plotsProducedGOT));
+                    Dashboard.qtyPlotsGOT.setText(Integer.toString(Dashboard.plotsProducedGOT));
                     semPlotMutexGOT.release();
                     semPlotGOT.release(cantPlotsGOT);
                 } else { // Si no es un episodio multiplo de 5 sale 2 endings normales
                     // Endings (cierres)
                     semEndMutexGOT.acquire(); // Entro en CS de Endings
                     Dashboard.endsProducedGOT -= cantEndsGOT;
-                    Dashboard.cantEndsGOT.setText(Integer.toString(Dashboard.endsProducedGOT));
+                    Dashboard.qtyEndsGOT.setText(Integer.toString(Dashboard.endsProducedGOT));
                     semEndMutexGOT.release();
                     semEndGOT.release(cantEndsGOT);
                 }
