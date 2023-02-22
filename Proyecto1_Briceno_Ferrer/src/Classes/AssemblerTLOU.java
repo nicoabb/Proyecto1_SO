@@ -97,7 +97,7 @@ public class AssemblerTLOU extends Thread{
                 mutexEnd.release();
                 semEnd.release(numEnd);
                 
-                if (Dashboard.chaptersTLOU > 0 && ((Dashboard.chaptersTLOU % 5) == 0)) { //Cada 5 capítulos usar Plot Twist
+                if (Dashboard.chaptersTLOU > 0 && ((Dashboard.chaptersTLOU % 4) == 0)) { //Cada 4 capítulos usar Plot Twist (para el 5to)
                     
                     //Retirar Plot twist para el capítulo
                     mutexPlot.acquire();
