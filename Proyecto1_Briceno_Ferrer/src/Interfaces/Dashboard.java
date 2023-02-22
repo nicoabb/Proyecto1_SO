@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Classes.assemblerGOT;
 import Classes.prodBegGOT;
 import Classes.prodCredGOT;
 import Classes.prodEndGOT;
@@ -18,62 +19,81 @@ import java.util.concurrent.Semaphore;
  */
 public class Dashboard extends javax.swing.JFrame {
 
+    public static int dayDuration = 1000; // Duracion de un dia (ms)
+
 //  Declarar productores GOT
     private prodIntroGOT prodIntroGOT;
     private prodCredGOT prodCredGOT;
     private prodBegGOT prodBegGOT;
     private prodEndGOT prodEndGOT;
     private prodPlotGOT prodPlotGOT;
-    
+
 //  Declarar semaforos GOT
-    private Semaphore semIntroGOT, semIntroMutexGOT, semCredGOT, semCredMutexGOT, semBegGOT, semBegMutexGOT, semEndGOT, semEndMutexGOT, semPlotGOT, semPlotMutexGOT;
+    public Semaphore semIntroGOT, semCredGOT, semBegGOT, semEndGOT, semPlotGOT;
+
+//  Declarar semaforos mutex GOT    
+    public Semaphore semIntroMutexGOT, semCredMutexGOT, semBegMutexGOT, semEndMutexGOT, semPlotMutexGOT, semAssemblerMutexGOT;
+
+//  Declarar semaforos ensamblador GOT
+    public Semaphore semEnsIntroGOT, semEnsBegGOT, semEnsCredGOT, semEnsPlotGOT, semEnsEndGOT;
     
 //  Declarar contadores GOT
-    public static int credsProducedGOT, introsProducedGOT, begsProducedGOT, endsProducedGOT, plotsProducedGOT = 0;   
+    public static int credsProducedGOT, introsProducedGOT, begsProducedGOT, endsProducedGOT, plotsProducedGOT, chaptersProducedGOT = 0;
+
+//  Declarar ensamblador GOT
+    private assemblerGOT assemblerGOT;
     
     /**
      * Creates new form Dashboard
      */
-    
     public Dashboard() {
         initComponents();
         instantiate();
 
     }
-    
+
     public void instantiate() {
-        
+
         //Instanciar al productor de intro
         this.semIntroGOT = new Semaphore(30); // REVISAR ESE 30, tiene que ver con el tamanio del drive
         this.semIntroMutexGOT = new Semaphore(1);
-        this.prodIntroGOT = new prodIntroGOT(semIntroMutexGOT, semIntroGOT);
+        this.semEnsIntroGOT = new Semaphore(0);
+        this.prodIntroGOT = new prodIntroGOT(semIntroMutexGOT, semIntroGOT, semEnsIntroGOT);
         this.prodIntroGOT.start();
-        
+
         //Instanciar al productor de creditos
         this.semCredGOT = new Semaphore(25);
-        this.semCredMutexGOT = new Semaphore(1); 
-        this.prodCredGOT = new prodCredGOT(semCredMutexGOT, semCredGOT);
+        this.semCredMutexGOT = new Semaphore(1);
+        this.semEnsCredGOT = new Semaphore(0);
+        this.prodCredGOT = new prodCredGOT(semCredMutexGOT, semCredGOT, semEnsCredGOT);
         this.prodCredGOT.start();
-        
+
         //Instanciar al productor de inicios
         this.semBegGOT = new Semaphore(50);
         this.semBegMutexGOT = new Semaphore(1);
-        this.prodBegGOT = new prodBegGOT(semBegMutexGOT, semBegGOT);
+        this.semEnsBegGOT = new Semaphore(0);
+        this.prodBegGOT = new prodBegGOT(semBegMutexGOT, semBegGOT, semEnsBegGOT);
         this.prodBegGOT.start();
-        
+
         //Instanciar al productor de cierres
         this.semEndGOT = new Semaphore(55);
         this.semEndMutexGOT = new Semaphore(1);
-        this.prodEndGOT = new prodEndGOT(semEndMutexGOT, semEndGOT);
+        this.semEnsEndGOT = new Semaphore(0);
+        this.prodEndGOT = new prodEndGOT(semEndMutexGOT, semEndGOT, semEnsEndGOT);
         this.prodEndGOT.start();
-        
+
         //Instanciar al productor de plot twists
         this.semPlotGOT = new Semaphore(40);
         this.semPlotMutexGOT = new Semaphore(1);
-        this.prodPlotGOT = new prodPlotGOT(semPlotMutexGOT, semPlotGOT);
+        this.semEnsPlotGOT = new Semaphore(0);
+        this.prodPlotGOT = new prodPlotGOT(semPlotMutexGOT, semPlotGOT, semEnsPlotGOT);
         this.prodPlotGOT.start();
+        
+        //Instanciar al ensamblador
+        this.semAssemblerMutexGOT = new Semaphore(1);
+        this.assemblerGOT = new assemblerGOT(semAssemblerMutexGOT, semIntroGOT, semIntroMutexGOT,  semEnsIntroGOT,  semBegGOT,  semBegMutexGOT,  semEnsBegGOT,  semEndGOT,  semEndMutexGOT,  semEnsEndGOT,  semCredGOT,  semCredMutexGOT,  semEnsCredGOT,  semPlotGOT,  semPlotMutexGOT,  semEnsPlotGOT);
+        this.assemblerGOT.start();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,6 +116,8 @@ public class Dashboard extends javax.swing.JFrame {
         cantEndsGOT = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         cantPlotsGOT = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        chaptersMade = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,34 +133,61 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel4.setText("Plottwists producidos:");
 
+        jLabel5.setText("Episodios listos:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelCreds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelIntro, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cantIntrosGOT, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(cantCredsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cantBegsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cantEndsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cantPlotsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(309, 309, 309))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelCreds, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cantCredsGOT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(cantPlotsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cantBegsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(459, 459, 459))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cantIntrosGOT, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                .addGap(461, 461, 461))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cantEndsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(chaptersMade, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(12, 12, 12))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cantIntrosGOT, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelIntro, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,30 +197,31 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(cantCredsGOT, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cantBegsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(cantEndsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-                    .addComponent(cantPlotsGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(245, 245, 245))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cantPlotsGOT, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cantEndsGOT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(chaptersMade, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,10 +272,12 @@ public class Dashboard extends javax.swing.JFrame {
     public static javax.swing.JLabel cantEndsGOT;
     public static javax.swing.JLabel cantIntrosGOT;
     public static javax.swing.JLabel cantPlotsGOT;
+    public static javax.swing.JLabel chaptersMade;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelCreds;
     public static javax.swing.JLabel labelIntro;

@@ -19,10 +19,13 @@ public class prodBegGOT extends Thread {
     private boolean stop = false;
     private Semaphore semBeg;
     private double begsPerDay = 0.25;
+    private Semaphore semEns;
     
-    public prodBegGOT(Semaphore mutex, Semaphore semBeg) {
+    public prodBegGOT(Semaphore mutex, Semaphore semBeg, Semaphore semEns) {
+        
         this.mutex = mutex;
         this.semBeg = semBeg;
+        this.semEns = semEns;
     }
     
     @Override
@@ -30,7 +33,7 @@ public class prodBegGOT extends Thread {
         while(!stop) {
                 try {
                     semBeg.acquire();
-                    Thread.sleep(Math.round(1000 / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
+                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
                     
                     mutex.acquire();
 
@@ -38,7 +41,7 @@ public class prodBegGOT extends Thread {
                     Interfaces.Dashboard.cantBegsGOT.setText(Integer.toString(Interfaces.Dashboard.begsProducedGOT));
                     
                     mutex.release();
-//                    semCred.release(); Este
+                    semEns.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

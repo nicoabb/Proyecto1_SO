@@ -19,10 +19,12 @@ public class prodPlotGOT extends Thread {
     private boolean stop = false;
     private Semaphore semPlot;
     private double plotsPerDay = 0.33333;
+    private Semaphore semEns;
     
-    public prodPlotGOT(Semaphore mutex, Semaphore semPlot) {
+    public prodPlotGOT(Semaphore mutex, Semaphore semPlot, Semaphore semEns) {
         this.mutex = mutex;
         this.semPlot = semPlot;
+        this.semEns = semEns;
     }
     
     @Override
@@ -31,14 +33,14 @@ public class prodPlotGOT extends Thread {
                 try {
                     semPlot.acquire();
                     
-                    Thread.sleep(Math.round(1000 / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
+                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
                     Interfaces.Dashboard.plotsProducedGOT++;
                     Interfaces.Dashboard.cantPlotsGOT.setText(Integer.toString(Interfaces.Dashboard.plotsProducedGOT));
                     
                     mutex.release();
-//                    semCred.release(); Este
+                    semEns.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

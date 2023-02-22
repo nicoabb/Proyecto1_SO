@@ -20,10 +20,12 @@ public class prodCredGOT extends Thread {
     private boolean stop = false;
     private Semaphore semCred;
     private int credsPerDay = 3;
+    private Semaphore semEns;
     
-    public prodCredGOT(Semaphore mutex, Semaphore semCred) {
+    public prodCredGOT(Semaphore mutex, Semaphore semCred, Semaphore semEns) {
         this.mutex = mutex;
         this.semCred = semCred;
+        this.semEns = semEns;
     }
     
     @Override
@@ -31,7 +33,7 @@ public class prodCredGOT extends Thread {
         while(!stop) {
                 try {
                     semCred.acquire();
-                    Thread.sleep(1000 / credsPerDay); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
+                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration/ credsPerDay)); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
                     
                     mutex.acquire();
 
@@ -39,7 +41,7 @@ public class prodCredGOT extends Thread {
                     Interfaces.Dashboard.cantCredsGOT.setText(Integer.toString(Interfaces.Dashboard.credsProducedGOT));
                     
                     mutex.release();
-//                    semCred.release(); Este
+                    semEns.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

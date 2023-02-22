@@ -20,10 +20,12 @@ public class prodIntroGOT extends Thread {
     private boolean stop = false;
     private Semaphore semIntro;
     private int introsPerDay = 3;
+    private Semaphore semEns;
     
-    public prodIntroGOT(Semaphore mutex, Semaphore semIntro) {
+    public prodIntroGOT(Semaphore mutex, Semaphore semIntro, Semaphore semEns) {
         this.mutex = mutex;
         this.semIntro = semIntro;
+        this.semEns = semEns;
     }
     
     @Override
@@ -31,7 +33,7 @@ public class prodIntroGOT extends Thread {
         while(!stop) {
                 try {
                     semIntro.acquire();
-                    Thread.sleep(1000 / introsPerDay); // Aqui espera 8 horas (que le toma hacer una intro)
+                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
                     
                     mutex.acquire();
                     
@@ -39,7 +41,7 @@ public class prodIntroGOT extends Thread {
                     Interfaces.Dashboard.cantIntrosGOT.setText(Integer.toString(Interfaces.Dashboard.introsProducedGOT));
                     
                     mutex.release();
-//                    semIntro.release();
+                    semEns.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

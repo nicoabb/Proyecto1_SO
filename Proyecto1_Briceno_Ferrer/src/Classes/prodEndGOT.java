@@ -19,10 +19,12 @@ public class prodEndGOT extends Thread {
     private boolean stop = false;
     private Semaphore semEnd;
     private double endsPerDay = 0.33333;
+    private Semaphore semEns;
     
-    public prodEndGOT(Semaphore mutex, Semaphore semEnd) {
+    public prodEndGOT(Semaphore mutex, Semaphore semEnd, Semaphore semEns) {
         this.mutex = mutex;
         this.semEnd = semEnd;
+        this.semEns = semEns;
     }
     
     @Override
@@ -31,14 +33,14 @@ public class prodEndGOT extends Thread {
                 try {
                     semEnd.acquire();
                     
-                    Thread.sleep(Math.round(1000 / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
+                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
                     Interfaces.Dashboard.endsProducedGOT++;
                     Interfaces.Dashboard.cantEndsGOT.setText(Integer.toString(Interfaces.Dashboard.endsProducedGOT));
                     
                     mutex.release();
-//                    semCred.release(); Este
+                    semEns.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
