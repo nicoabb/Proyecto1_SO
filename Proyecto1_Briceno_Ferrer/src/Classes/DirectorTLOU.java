@@ -32,22 +32,21 @@ public class DirectorTLOU extends Thread{
     public void run() {
         while(!stop){
             try {
+                int checkPeriod = getRandom(12,18) * 1000; //Período en el que irá a revisar al PM
+                int remainderTime = (dayDuration * checkPeriod) / 24000; //Si el día dura 2 horas, esta es la conversión
+                
                 //Director revisa el contador
-                
                 countMutex.acquire();
-                
-                if(Dashboard.counter == 0) {
+                System.out.println(Dashboard.counter);
+                if(Dashboard.counter <= 0) {
                     Dashboard.dirState.setText("Entregando capítulos a HBO MAX");
                     Dashboard.chaptersTLOU = 0;
                     Dashboard.counter = Dashboard.backupCounter;
                 }
-                
                 countMutex.release();
-                
-                int checkPeriod = getRandom(12,18) * 1000; //Período en el que irá a revisar al PM
-                
+                                                
                 while(checkPeriod >= 0) {
-                    int checkTime = getRandom(500, 1500); //Tiempo que vigilará a PM (Ya en milisegundos)
+                    int checkTime = (dayDuration * getRandom(500, 1500)) / 24000; //Tiempo que vigilará a PM (Ya en milisegundos)
                     Thread.sleep(checkTime);
                     
                     Dashboard.dirState.setText("Revisando al PM");
@@ -59,6 +58,8 @@ public class DirectorTLOU extends Thread{
                     
                     checkPeriod -= checkTime;
                 }
+                
+                Thread.sleep(remainderTime); //Que duerma mientras no le toca revisar ni vigilar
 
             } catch (InterruptedException ex) {
 

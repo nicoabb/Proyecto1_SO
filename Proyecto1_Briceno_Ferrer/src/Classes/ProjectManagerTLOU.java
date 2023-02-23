@@ -20,13 +20,17 @@ public class ProjectManagerTLOU extends Thread{
     private int remainderTime;  //Cantidad de horas para alternar entre ver Rick y Morty y revisar sprints reviews
     public String state; //Estado del PM (RyM o sprints reviews)
     private Semaphore stateMutex; //Mutex del estado, para que no se cambie cuando el director lea
+    private int eqHour; //Horas equivalentes para la duración del día
+    private int eqMin; //Minutos equivalentes para la duración del día
     
     public ProjectManagerTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex) {
         this.dayDuration = (dayDuration * 1000);
         this.stop = stop;
         this.countMutex = countMutex;
         this.stateMutex = stateMutex;
-        this.remainderTime = this.dayDuration - 1000;
+        this.eqHour = (this.dayDuration * 1000) / 24000;
+        this.eqMin = (this.dayDuration * 250) / 24000;
+        this.remainderTime = this.dayDuration - eqHour;
         
     }
     
