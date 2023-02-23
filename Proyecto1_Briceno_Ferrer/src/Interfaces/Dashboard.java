@@ -8,6 +8,7 @@ package Interfaces;
 import Classes.AlternatorGOT;
 import Classes.ProjectManagerGOT;
 import Classes.assemblerGOT;
+import Classes.directorGOT;
 import Classes.prodBegGOT;
 import Classes.prodCredGOT;
 import Classes.prodEndGOT;
@@ -21,7 +22,8 @@ import java.util.concurrent.Semaphore;
  */
 public class Dashboard extends javax.swing.JFrame {
 
-    public static int dayDuration = 10000; // Duracion de un dia (ms)
+    public static int dayDuration = 1000; // Duracion de un dia (ms)
+    public static int hourDuration = dayDuration / 24;
     public static int cutDuration = 30;
 
 //  Declarar productores GOT
@@ -47,9 +49,12 @@ public class Dashboard extends javax.swing.JFrame {
     private assemblerGOT assemblerGOT;
     
 //  Declarar PM
-    private Semaphore counter;
+    private Semaphore counterGOT;
     private ProjectManagerGOT pmGOT;
-    private AlternatorGOT alternator;
+    private Semaphore counterMutexGOT;
+    
+//  Declarar Director
+    private directorGOT directorGOT;
     
     /**
      * Creates new form Dashboard
@@ -103,12 +108,14 @@ public class Dashboard extends javax.swing.JFrame {
         this.assemblerGOT.start();
         
         //Instanciar el PM
-        this.counter = new Semaphore(cutDuration);
-        this.pmGOT = new ProjectManagerGOT(counter);
-//        this.alternator = new AlternatorGOT(this.pmGOT);
+        this.counterGOT = new Semaphore(cutDuration);
+        this.counterMutexGOT = new Semaphore(1);
+        this.pmGOT = new ProjectManagerGOT(counterGOT, counterMutexGOT);
         this.pmGOT.start();
         
-//        this.alternator.start();
+        //Instanciar el director
+        this.directorGOT = new directorGOT(pmGOT, counterGOT, counterMutexGOT);
+        this.directorGOT.start();
         
     }
 
