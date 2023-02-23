@@ -15,9 +15,8 @@ import java.util.logging.Logger;
  * @author emilo
  */
 public class prodIntroGOT extends Thread {
-
+    private boolean stop;
     private Semaphore mutex;
-    private boolean stop = false;
     private Semaphore semIntro;
     private int introsPerDay = 3;
     private Semaphore semEns;
@@ -32,21 +31,29 @@ public class prodIntroGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
+                    
+//                    System.out.println(count);
                     semIntro.acquire();
-                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
+//                    System.out.println("A esperar");
+                    Thread.sleep(Math.round(Dashboard.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
                     
                     mutex.acquire();
                     
-                    Interfaces.Dashboard.introsProducedGOT++;
-                    Interfaces.Dashboard.qtyIntrosGOT.setText(Integer.toString(Interfaces.Dashboard.introsProducedGOT));
+                    Dashboard.introsProducedGOT++;
+                    Dashboard.qtyIntrosGOT.setText(Integer.toString(Dashboard.introsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
+//                    System.out.println("Creado!");
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
+    }
+    
+    public void setStop() {
+        stop = !stop;
     }
     
 }

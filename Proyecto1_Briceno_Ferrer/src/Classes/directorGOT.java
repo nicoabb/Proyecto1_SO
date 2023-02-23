@@ -33,12 +33,12 @@ public class directorGOT extends Thread {
             try {
 //                cicle = true;
                 double guardLength = (Math.random() * (Dashboard.dayDuration * 0.75 - Dashboard.dayDuration / 2)) + Dashboard.dayDuration / 2;
-                counterMutex.acquire(); // Trata de agarrar exclusividad sobre el semaforo del contador
-                if (counter.availablePermits() == 0) {
-                    counter.release(30);
-                    System.out.println("Liberé el corotro mibró!");
-                }
-                counterMutex.release();
+//                counterMutex.acquire(); // Trata de agarrar exclusividad sobre el semaforo del contador
+//                if (counter.availablePermits() == 0) {
+//                    counter.release(30);
+////                    System.out.println("Liberé el corotro mibró!");
+//                }
+//                counterMutex.release();
                 double elapsedTime = 0;
                 double startTime = System.currentTimeMillis();
                 while (elapsedTime < guardLength) {
@@ -46,15 +46,17 @@ public class directorGOT extends Thread {
                     double timeBetweenCheck = Math.random() * ((1.5 * Dashboard.hourDuration) - (0.5 * Dashboard.hourDuration)) + 0.5 * Dashboard.hourDuration;
                     Thread.sleep(Math.round(timeBetweenCheck));
                     // Aqui va y ve qué está haciendo el PM
-                    System.out.println("Revisando...");
+//                    System.out.println("Revisando...");
                     if (pm.watchingRaM) {
-                        System.out.println("Está viendo Rikimorti el PM!!!");
+//                        System.out.println("Está viendo Rikimorti el PM!!!");
                     }
                     elapsedTime = System.currentTimeMillis() - startTime;
 
                 }
+                System.out.println("descansando");
 
                 Thread.sleep((Dashboard.dayDuration - Math.round(guardLength)));
+//                System.out.println("ahora a repetir el ciclo");
             } catch (InterruptedException ex) {
                 Logger.getLogger(directorGOT.class.getName()).log(Level.SEVERE, null, ex);
             }

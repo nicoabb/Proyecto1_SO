@@ -38,7 +38,7 @@ public class prodCredGOT extends Thread {
                     mutex.acquire();
 
                     Interfaces.Dashboard.credsProducedGOT++;
-                    Interfaces.Dashboard.qtyCredsGOT.setText(Integer.toString(Interfaces.Dashboard.credsProducedGOT));
+                    Interfaces.Dashboard.qtyCredGOT.setText(Integer.toString(Interfaces.Dashboard.credsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

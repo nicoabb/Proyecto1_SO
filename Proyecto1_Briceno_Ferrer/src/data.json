@@ -1,0 +1,33 @@
+{
+  "days": {
+    "dayLength": 1000,
+    "cutDuration": 30
+  },
+  "producers": [
+    {
+      "category": "intro",
+      "driveGb": 30,
+      "amountProducers": 3
+    },
+    {
+      "category": "credits",
+      "driveGb": 25,
+      "amountProducers": 3
+    },
+    {
+      "category": "beginning",
+      "driveGb": 50,
+      "amountProducers": 6
+    },
+    {
+      "category": "ending",
+      "driveGb": 55,
+      "amountProducers": 5
+    },
+    {
+      "category": "plottwist",
+      "driveGb": 30,
+      "amountProducers": 2
+    }
+  ]
+}

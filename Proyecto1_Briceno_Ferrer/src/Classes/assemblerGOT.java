@@ -120,15 +120,15 @@ public class assemblerGOT extends Thread {
                 // Credits
                 semCredMutexGOT.acquire(); // Entro en CS de Endings
                 Dashboard.credsProducedGOT -= cantCredsGOT;
-                Dashboard.qtyCredsGOT.setText(Integer.toString(Dashboard.credsProducedGOT));
+                Dashboard.qtyProdCredsGOTLabel.setText(Integer.toString(Dashboard.credsProducedGOT));
                 semCredMutexGOT.release();
                 semCredGOT.release(cantCredsGOT);
 
-                if (chapterCounter % 5 != 0) { // Si es un episodio multiplo de 5 tocan 2 plot
+                if (chapterCounter % 5 == 0) { // Si es un episodio multiplo de 5 tocan 2 plot
                     // Plot twists
                     semPlotMutexGOT.acquire();
                     Dashboard.plotsProducedGOT -= cantPlotsGOT;
-                    Dashboard.qtyPlotsGOT.setText(Integer.toString(Dashboard.plotsProducedGOT));
+                    Dashboard.qtyProdPlotsGOTLabel.setText(Integer.toString(Dashboard.plotsProducedGOT));
                     semPlotMutexGOT.release();
                     semPlotGOT.release(cantPlotsGOT);
                 } else { // Si no es un episodio multiplo de 5 sale 2 endings normales
