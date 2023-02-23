@@ -18,7 +18,7 @@ public class ProjectManagerTLOU extends Thread{
     private boolean stop;
     private Semaphore countMutex; 
     private int remainderTime;  //Cantidad de horas para alternar entre ver Rick y Morty y revisar sprints reviews
-    private String state; //Estado del PM (RyM o sprints reviews)
+    public String state; //Estado del PM (RyM o sprints reviews)
     private Semaphore stateMutex; //Mutex del estado, para que no se cambie cuando el director lea
     
     public ProjectManagerTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex) {
