@@ -21,15 +21,15 @@ public class ProjectManagerTLOU extends Thread{
     public String state; //Estado del PM (RyM o sprints reviews)
     private Semaphore stateMutex; //Mutex del estado, para que no se cambie cuando el director lea
     private int eqHour; //Horas equivalentes para la duración del día
-    private int eqMin; //Minutos equivalentes para la duración del día
+    private int eqMinute; //Minutos equivalentes para la duración del día
     
     public ProjectManagerTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex) {
         this.dayDuration = (dayDuration * 1000);
         this.stop = stop;
         this.countMutex = countMutex;
         this.stateMutex = stateMutex;
-        this.eqHour = (this.dayDuration * 1000) / 24000;
-        this.eqMin = (this.dayDuration * 250) / 24000;
+        this.eqHour = this.dayDuration / 24;
+        this.eqMinute = this.dayDuration / 1440;
         this.remainderTime = this.dayDuration - eqHour;
         
     }
@@ -49,7 +49,7 @@ public class ProjectManagerTLOU extends Thread{
                 
                 Dashboard.counter--;
                 Dashboard.daysCounter.setText(Integer.toString(Dashboard.counter));
-                Thread.sleep(1000);
+                Thread.sleep(eqHour); //En TLOU es 1 hora
                 
                 countMutex.release();
                 
@@ -60,20 +60,20 @@ public class ProjectManagerTLOU extends Thread{
                     Dashboard.pmState.setText(state);
                     stateMutex.release();
                     
-                    Thread.sleep(250); //1000 ms es 1 hora, 1/4 de hora son 15 minutos, de ahí los 250 ms
-                    remainderTime -= 250;
+                    Thread.sleep(eqMinute * 15); //15 minutos
+                    remainderTime -= (eqMinute * 15);
                     
                     stateMutex.acquire();
                     state = "Revisando sprints reviews";
                     Dashboard.pmState.setText(state);
                     stateMutex.release();
                     
-                    Thread.sleep(250);
-                    remainderTime -= 250;
+                    Thread.sleep(eqMinute * 15); //15 minutos
+                    remainderTime -= (eqMinute * 15);
                     
                 }
                 
-                remainderTime = dayDuration - 1000;
+                remainderTime = dayDuration - eqHour;
 
             } catch (InterruptedException ex) {
 

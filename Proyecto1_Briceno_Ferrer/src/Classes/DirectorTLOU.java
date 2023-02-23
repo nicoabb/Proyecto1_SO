@@ -19,6 +19,8 @@ public class DirectorTLOU extends Thread{
     private Semaphore countMutex; 
     private Semaphore stateMutex; //Mutex del estado, para que no se cambie cuando el director lea
     private ProjectManagerTLOU proManager;
+    private int eqHour; //Variable para trabajar las horas de acuerdo a la duración del día establecida
+    private int eqMinute; //Variable para trabajar los minutos de acuerdo a la duración del día establecida
     
     public DirectorTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex, ProjectManagerTLOU proManager) {
         this.dayDuration = (dayDuration * 1000);
@@ -26,18 +28,20 @@ public class DirectorTLOU extends Thread{
         this.countMutex = countMutex;
         this.stateMutex = stateMutex;
         this.proManager = proManager;
+        this.eqHour = this.dayDuration / 24;
+        this.eqMinute = this.dayDuration / 1440;
     }
     
     @Override
     public void run() {
         while(!stop){
             try {
-                int checkPeriod = getRandom(12,18) * 1000; //Período en el que irá a revisar al PM
-                int remainderTime = (dayDuration * checkPeriod) / 24000; //Si el día dura 2 horas, esta es la conversión
+                int randPeriod = getRandom(12,18);
+                int checkPeriod =  randPeriod * eqHour; //Período en el que irá a revisar al PM
+                int remainderTime = (24 - randPeriod) * eqHour; //El tiempo que le sobrará en el día
                 
                 //Director revisa el contador
                 countMutex.acquire();
-                System.out.println(Dashboard.counter);
                 if(Dashboard.counter <= 0) {
                     Dashboard.dirState.setText("Entregando capítulos a HBO MAX");
                     Dashboard.chaptersTLOU = 0;
@@ -46,7 +50,8 @@ public class DirectorTLOU extends Thread{
                 countMutex.release();
                                                 
                 while(checkPeriod >= 0) {
-                    int checkTime = (dayDuration * getRandom(500, 1500)) / 24000; //Tiempo que vigilará a PM (Ya en milisegundos)
+                    int randTime = getRandom(30, 90); //Tiempo aleatorio entre 30 minutos y 90 minutos
+                    int checkTime = randTime * eqMinute; //Tiempo que vigilará a PM (Ya en milisegundos)
                     Thread.sleep(checkTime);
                     
                     Dashboard.dirState.setText("Revisando al PM");
