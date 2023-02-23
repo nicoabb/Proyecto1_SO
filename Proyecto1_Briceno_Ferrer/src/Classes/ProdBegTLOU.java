@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -36,8 +36,8 @@ public class ProdBegTLOU extends Thread{
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 mutex.acquire();
                 
-                Dashboard.begDriveTLOU++;
-                Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
+                TLOUInterface.begDriveTLOU++;
+                TLOUInterface.numBegTLOU.setText(Integer.toString(TLOUInterface.begDriveTLOU));
 
                 mutex.release();
                 semAssembler.release();

@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -78,31 +78,31 @@ public class AssemblerTLOU extends Thread{
 
                 //Retirar intro para el capítulo
                 mutexIntro.acquire();
-                Dashboard.introDriveTLOU -= numIntro;
-                Dashboard.numIntroTLOU.setText(Integer.toString(Dashboard.introDriveTLOU));
+                TLOUInterface.introDriveTLOU -= numIntro;
+                TLOUInterface.numIntroTLOU.setText(Integer.toString(TLOUInterface.introDriveTLOU));
                 mutexIntro.release();
                 semIntro.release(numIntro);
 
                 //Retirar inicios (begginings) para el capítulo
                 mutexBeg.acquire(); 
-                Dashboard.begDriveTLOU -= numBeg;
-                Dashboard.numBegTLOU.setText(Integer.toString(Dashboard.begDriveTLOU));
+                TLOUInterface.begDriveTLOU -= numBeg;
+                TLOUInterface.numBegTLOU.setText(Integer.toString(TLOUInterface.begDriveTLOU));
                 mutexBeg.release();
                 semBeg.release(numBeg);
 
                 //Retirar cierres (end) para el capítulo
                 mutexEnd.acquire();
-                Dashboard.endDriveTLOU -= numEnd;
-                Dashboard.numEndTLOU.setText(Integer.toString(Dashboard.endDriveTLOU));
+                TLOUInterface.endDriveTLOU -= numEnd;
+                TLOUInterface.numEndTLOU.setText(Integer.toString(TLOUInterface.endDriveTLOU));
                 mutexEnd.release();
                 semEnd.release(numEnd);
                 
-                if (Dashboard.chaptersTLOU > 0 && ((Dashboard.chaptersTLOU % 4) == 0)) { //Cada 4 capítulos usar Plot Twist (para el 5to)
+                if (TLOUInterface.chaptersTLOU > 0 && ((TLOUInterface.chaptersTLOU % 4) == 0)) { //Cada 4 capítulos usar Plot Twist (para el 5to)
                     
                     //Retirar Plot twist para el capítulo
                     mutexPlot.acquire();
-                    Dashboard.plotDriveTLOU -= numPlot;
-                    Dashboard.numPlotTLOU.setText(Integer.toString(Dashboard.plotDriveTLOU));
+                    TLOUInterface.plotDriveTLOU -= numPlot;
+                    TLOUInterface.numPlotTLOU.setText(Integer.toString(TLOUInterface.plotDriveTLOU));
                     mutexPlot.release();
                     semPlot.release(numPlot);
 
@@ -110,8 +110,8 @@ public class AssemblerTLOU extends Thread{
 
                     //Retirar creditos para el capítulo
                     mutexCredit.acquire();
-                    Dashboard.creditDriveTLOU -= numCredit;
-                    Dashboard.numCreditTLOU.setText(Integer.toString(Dashboard.creditDriveTLOU));
+                    TLOUInterface.creditDriveTLOU -= numCredit;
+                    TLOUInterface.numCreditTLOU.setText(Integer.toString(TLOUInterface.creditDriveTLOU));
                     mutexCredit.release();
                     semCredit.release(numCredit);
 
@@ -120,8 +120,8 @@ public class AssemblerTLOU extends Thread{
                 //Aumentar número de capítulos ensamblados
                 mutexAssembler.acquire();
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
-                Dashboard.chaptersTLOU += 1;
-                Dashboard.numChapters.setText(Integer.toString(Dashboard.chaptersTLOU));
+                TLOUInterface.chaptersTLOU += 1;
+                TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
                 mutexAssembler.release();
 
             }catch(Exception e){

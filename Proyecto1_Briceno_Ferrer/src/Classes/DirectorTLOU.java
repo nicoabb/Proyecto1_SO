@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
 
 
@@ -42,10 +42,10 @@ public class DirectorTLOU extends Thread{
                 
                 //Director revisa el contador
                 countMutex.acquire();
-                if(Dashboard.counter <= 0) {
-                    Dashboard.dirState.setText("Entregando capítulos a HBO MAX");
-                    Dashboard.chaptersTLOU = 0;
-                    Dashboard.counter = Dashboard.backupCounter;
+                if(TLOUInterface.counter <= 0) {
+                    TLOUInterface.dirState.setText("Entregando capítulos a HBO MAX");
+                    TLOUInterface.chaptersTLOU = 0;
+                    TLOUInterface.counter = TLOUInterface.backupCounter;
                 }
                 countMutex.release();
                                                 
@@ -54,10 +54,10 @@ public class DirectorTLOU extends Thread{
                     int checkTime = randTime * eqMinute; //Tiempo que vigilará a PM (Ya en milisegundos)
                     Thread.sleep(checkTime);
                     
-                    Dashboard.dirState.setText("Revisando al PM");
+                    TLOUInterface.dirState.setText("Revisando al PM");
                     stateMutex.acquire();
                     if(proManager.state.contains("Viendo Rick y Morty")){
-                        Dashboard.dirState.setText("¡Atrapado!");
+                        TLOUInterface.dirState.setText("¡Atrapado!");
                     }
                     stateMutex.release();
                     

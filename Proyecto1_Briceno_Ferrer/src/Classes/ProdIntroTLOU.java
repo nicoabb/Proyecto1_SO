@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -37,8 +37,8 @@ public class ProdIntroTLOU extends Thread{
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 mutex.acquire();
                 
-                Dashboard.introDriveTLOU++;
-                Dashboard.numIntroTLOU.setText(Integer.toString(Dashboard.introDriveTLOU));
+                TLOUInterface.introDriveTLOU++;
+                TLOUInterface.numIntroTLOU.setText(Integer.toString(TLOUInterface.introDriveTLOU));
 
                 mutex.release();
                 semAssembler.release();

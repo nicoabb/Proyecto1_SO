@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -44,11 +44,11 @@ public class ProjectManagerTLOU extends Thread{
                 
                 stateMutex.acquire();
                 state = "Cambiando el contador";
-                Dashboard.pmState.setText(state);
+                TLOUInterface.pmState.setText(state);
                 stateMutex.release();
                 
-                Dashboard.counter--;
-                Dashboard.daysCounter.setText(Integer.toString(Dashboard.counter));
+                TLOUInterface.counter--;
+                TLOUInterface.daysCounter.setText(Integer.toString(TLOUInterface.counter));
                 Thread.sleep(eqHour); //En TLOU es 1 hora
                 
                 countMutex.release();
@@ -57,7 +57,7 @@ public class ProjectManagerTLOU extends Thread{
                     
                     stateMutex.acquire();
                     state = "Viendo Rick y Morty";
-                    Dashboard.pmState.setText(state);
+                    TLOUInterface.pmState.setText(state);
                     stateMutex.release();
                     
                     Thread.sleep(eqMinute * 15); //15 minutos
@@ -65,7 +65,7 @@ public class ProjectManagerTLOU extends Thread{
                     
                     stateMutex.acquire();
                     state = "Revisando sprints reviews";
-                    Dashboard.pmState.setText(state);
+                    TLOUInterface.pmState.setText(state);
                     stateMutex.release();
                     
                     Thread.sleep(eqMinute * 15); //15 minutos
