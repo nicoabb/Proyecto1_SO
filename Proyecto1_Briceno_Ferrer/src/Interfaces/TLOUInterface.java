@@ -30,10 +30,12 @@ import org.json.simple.parser.ParseException;
  */
 public class TLOUInterface extends javax.swing.JFrame {
     
-    private boolean stop;
+    private boolean stop = false;
     private int dayDuration;
     public static volatile int counter; //Contador del número de días restantes para el corte de comparación
     public static volatile int backupCounter; //El que guardará sin ser modificado la cantidad de días
+    private int AvailableProds = 0;
+
     //Espacio en Drive
     public static volatile int introDriveTLOU = 0;
     public static volatile int creditDriveTLOU = 0;
@@ -103,7 +105,6 @@ public class TLOUInterface extends javax.swing.JFrame {
 
             JSONObject dayObj = (JSONObject) jsonObject.get("days");
             this.dayDuration = ((Long) dayObj.get("dayDuration")).intValue();
-            System.out.println("Logre sacar la duración del día y es: " + dayDuration);
             TLOUInterface.counter = ((Long) dayObj.get("counter")).intValue();
             TLOUInterface.backupCounter = counter;
 
@@ -145,10 +146,8 @@ public class TLOUInterface extends javax.swing.JFrame {
             TLOUInterface.numProdAssemblers.setText(Integer.toString(assemblersTLOU));
 
         } catch (IOException | ParseException e) {
-            System.out.println("Estoy poteando");
+            System.out.println("Estoy poteando en el JSON");
         }
-        
-        this.stop = false;
         
         //Creando ProdIntroTLOU
         this.mutexIntroTLOU = new Semaphore(1);
@@ -212,6 +211,7 @@ public class TLOUInterface extends javax.swing.JFrame {
         numIntroTLOU = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         numCreditTLOU = new javax.swing.JLabel();
+        dirState1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         numBegTLOU = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -242,6 +242,7 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         plotMinusTLOU = new javax.swing.JButton();
         numProdPlot = new javax.swing.JLabel();
+        availableProds = new javax.swing.JLabel();
         plotPlusTLOU = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         assemblerMinusTLOU = new javax.swing.JButton();
@@ -290,6 +291,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         begMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         begMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         begMinusTLOU.setText("-");
+        begMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                begMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(begMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 250, -1, -1));
 
         numProdBeg.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -320,6 +326,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         creditMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         creditMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         creditMinusTLOU.setText("-");
+        creditMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creditMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(creditMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, -1, -1));
 
         numProdCredit.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -391,6 +402,12 @@ public class TLOUInterface extends javax.swing.JFrame {
         numCreditTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         numCreditTLOU.setText("0");
         getContentPane().add(numCreditTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 220, 40, 27));
+
+        dirState1.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        dirState1.setForeground(new java.awt.Color(153, 153, 153));
+        dirState1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        dirState1.setText("Productoras disponibles (máx 10):");
+        getContentPane().add(dirState1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 380, 200, 30));
 
         jLabel4.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
@@ -513,6 +530,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         introMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         introMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         introMinusTLOU.setText("-");
+        introMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                introMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(introMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 190, -1, -1));
 
         introPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
@@ -537,6 +559,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         endMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         endMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         endMinusTLOU.setText("-");
+        endMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                endMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(endMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 280, -1, -1));
 
         endPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
@@ -567,6 +594,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         plotMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         plotMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         plotMinusTLOU.setText("-");
+        plotMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(plotMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
 
         numProdPlot.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -574,6 +606,12 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdPlot.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         numProdPlot.setText("0");
         getContentPane().add(numProdPlot, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 50, 30));
+
+        availableProds.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        availableProds.setForeground(new java.awt.Color(102, 102, 102));
+        availableProds.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        availableProds.setText("10");
+        getContentPane().add(availableProds, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 380, 50, 30));
 
         plotPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
         plotPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -597,6 +635,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         assemblerMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         assemblerMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
         assemblerMinusTLOU.setText("-");
+        assemblerMinusTLOU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assemblerMinusTLOUActionPerformed(evt);
+            }
+        });
         getContentPane().add(assemblerMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, -1, -1));
 
         numProdAssemblers.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -621,7 +664,7 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(51, 51, 51));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("DIRECTOR Y PM");
-        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 420, 180, 26));
+        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 420, 180, 26));
 
         jLabel20.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(51, 51, 51));
@@ -705,27 +748,95 @@ public class TLOUInterface extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void introPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayIntroTLOU != null){
+            if(AvailableProds > 0){
+                
+                arrayIntroTLOU[introProdTLOU] = new ProdIntroTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                introProdTLOU++;
+                TLOUInterface.numProdIntro.setText(Integer.toString(introProdTLOU));
+                if (!this.stop) {
+                    this.arrayIntroTLOU[introProdTLOU - 1].start();
+                }
+                AvailableProds--;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+        }
     }//GEN-LAST:event_introPlusTLOUActionPerformed
 
     private void creditPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayCreditTLOU != null){
+            if(AvailableProds > 0){
+                
+                arrayCreditTLOU[creditProdTLOU] = new ProdCreditTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                creditProdTLOU++;
+                TLOUInterface.numProdCredit.setText(Integer.toString(creditProdTLOU));
+                if (!this.stop) {
+                    this.arrayCreditTLOU[creditProdTLOU - 1].start();
+                }
+                AvailableProds--;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+        }
     }//GEN-LAST:event_creditPlusTLOUActionPerformed
 
     private void begPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_begPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayBegTLOU != null){
+            if(AvailableProds > 0){
+                
+                arrayBegTLOU[begProdTLOU] = new ProdBegTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                begProdTLOU++;
+                TLOUInterface.numProdBeg.setText(Integer.toString(begProdTLOU));
+                if (!this.stop) {
+                    this.arrayBegTLOU[begProdTLOU - 1].start();
+                }
+                AvailableProds--;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+        }
     }//GEN-LAST:event_begPlusTLOUActionPerformed
 
     private void endPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayEndTLOU != null){
+            if(AvailableProds > 0){
+                
+                arrayEndTLOU[endProdTLOU] = new ProdEndTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                endProdTLOU++;
+                TLOUInterface.numProdEnd.setText(Integer.toString(endProdTLOU));
+                if (!this.stop) {
+                    this.arrayEndTLOU[endProdTLOU - 1].start();
+                }
+                AvailableProds--;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+        }
     }//GEN-LAST:event_endPlusTLOUActionPerformed
 
     private void plotPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayPlotTLOU != null){
+            if(AvailableProds > 0){
+                
+                arrayPlotTLOU[plotProdTLOU] = new ProdPlotTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                endProdTLOU++;
+                TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
+                if (!this.stop) {
+                    this.arrayPlotTLOU[plotProdTLOU - 1].start();
+                }
+                AvailableProds--;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+        }
     }//GEN-LAST:event_plotPlusTLOUActionPerformed
 
     private void assemblerPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assemblerPlusTLOUActionPerformed
-        // TODO add your handling code here:
+        if(this.arrayAssemblerTLOU != null){
+                            
+            arrayAssemblerTLOU[assemblersTLOU] = new AssemblerTLOU(stop, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+            assemblersTLOU++;
+            TLOUInterface.numProdAssemblers.setText(Integer.toString(assemblersTLOU));
+            if (!this.stop) {
+                this.arrayAssemblerTLOU[assemblersTLOU - 1].start();
+            }
+        }
     }//GEN-LAST:event_assemblerPlusTLOUActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
@@ -737,43 +848,37 @@ public class TLOUInterface extends javax.swing.JFrame {
             
             // Llenar arrays de productores
             // Creando Intros
-            System.out.println("Productores de Intro: " + introProdTLOU);
             for (int i = 0; i < introProdTLOU; i++) {
                 this.arrayIntroTLOU[i] = new ProdIntroTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 this.arrayIntroTLOU[i].start();
             }
             
             // Creando Credits
-            System.out.println("Productores de Credit: " + creditProdTLOU);
             for (int i = 0; i < creditProdTLOU; i++) {
                 this.arrayCreditTLOU[i] = new ProdCreditTLOU(stop, dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
                 this.arrayCreditTLOU[i].start();
             }
             
             // Creando Beginnings
-            System.out.println("Productores de Beg: " + begProdTLOU);
             for (int i = 0; i < begProdTLOU; i++) {
                 this.arrayBegTLOU[i] = new ProdBegTLOU(stop, dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
                 this.arrayBegTLOU[i].start();
             }
 
             // Creando Endings
-            System.out.println("Productores de End: " + endProdTLOU);
             for (int i = 0; i < endProdTLOU; i++) {
                 this.arrayEndTLOU[i] = new ProdEndTLOU(stop, dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
                 this.arrayEndTLOU[i].start();
             }
 
             // Creando Plot twists
-            System.out.println("Productores de Plot: " + plotProdTLOU);
             for (int i = 0; i < plotProdTLOU; i++) {
                 this.arrayPlotTLOU[i] = new ProdPlotTLOU(stop, dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
                 this.arrayPlotTLOU[i].start();
             }
 
             // Creando Ensamblador
-            System.out.println("Ensambladores: " + introProdTLOU);
-            for (int i = 0; i < plotProdTLOU; i++) {
+            for (int i = 0; i < assemblersTLOU; i++) {
                 this.arrayAssemblerTLOU[i] = new AssemblerTLOU(stop, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
                 this.arrayAssemblerTLOU[i].start();
             }
@@ -789,6 +894,76 @@ public class TLOUInterface extends javax.swing.JFrame {
             dirTLOU.start();
         }
     }//GEN-LAST:event_startButtonActionPerformed
+
+    private void introMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introMinusTLOUActionPerformed
+        if (this.arrayIntroTLOU != null) {
+            if (Integer.parseInt(numProdIntro.getText()) > 0) {
+                introProdTLOU--;
+                numProdIntro.setText(Integer.toString(introProdTLOU));
+                AvailableProds++;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+
+        }
+    }//GEN-LAST:event_introMinusTLOUActionPerformed
+
+    private void creditMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditMinusTLOUActionPerformed
+        if (this.arrayCreditTLOU != null) {
+            if (Integer.parseInt(numProdCredit.getText()) > 0) {
+                creditProdTLOU--;
+                numProdCredit.setText(Integer.toString(creditProdTLOU));
+                AvailableProds++;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+
+        }
+    }//GEN-LAST:event_creditMinusTLOUActionPerformed
+
+    private void begMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_begMinusTLOUActionPerformed
+        if (this.arrayBegTLOU != null) {
+            if (Integer.parseInt(numProdBeg.getText()) > 0) {
+                begProdTLOU--;
+                numProdBeg.setText(Integer.toString(begProdTLOU));
+                AvailableProds++;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+
+        }
+    }//GEN-LAST:event_begMinusTLOUActionPerformed
+
+    private void endMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endMinusTLOUActionPerformed
+        if (this.arrayEndTLOU != null) {
+            if (Integer.parseInt(numProdEnd.getText()) > 0) {
+                endProdTLOU--;
+                numProdEnd.setText(Integer.toString(endProdTLOU));
+                AvailableProds++;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+
+        }
+    }//GEN-LAST:event_endMinusTLOUActionPerformed
+
+    private void plotMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotMinusTLOUActionPerformed
+        if (this.arrayPlotTLOU != null) {
+            if (Integer.parseInt(numProdPlot.getText()) > 0) {
+                plotProdTLOU--;
+                numProdPlot.setText(Integer.toString(plotProdTLOU));
+                AvailableProds++;
+                availableProds.setText(Integer.toString(AvailableProds));
+            }
+
+        }
+    }//GEN-LAST:event_plotMinusTLOUActionPerformed
+
+    private void assemblerMinusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assemblerMinusTLOUActionPerformed
+        if (this.arrayAssemblerTLOU != null) {
+            if (Integer.parseInt(numProdAssemblers.getText()) > 0) {
+                assemblersTLOU--;
+                numProdAssemblers.setText(Integer.toString(assemblersTLOU));
+            }
+
+        }
+    }//GEN-LAST:event_assemblerMinusTLOUActionPerformed
 
     /**
      * @param args the command line arguments
@@ -833,6 +1008,7 @@ public class TLOUInterface extends javax.swing.JFrame {
     private javax.swing.JLabel TLOUlogo3;
     private javax.swing.JButton assemblerMinusTLOU;
     private javax.swing.JButton assemblerPlusTLOU;
+    public static javax.swing.JLabel availableProds;
     private javax.swing.JLabel backgroundTLOU;
     private javax.swing.JButton begMinusTLOU;
     private javax.swing.JButton begPlusTLOU;
@@ -846,6 +1022,7 @@ public class TLOUInterface extends javax.swing.JFrame {
     private javax.swing.JButton creditPlusTLOU;
     public static javax.swing.JLabel daysCounter;
     public static javax.swing.JLabel dirState;
+    public static javax.swing.JLabel dirState1;
     private javax.swing.JButton endMinusTLOU;
     private javax.swing.JButton endPlusTLOU;
     private javax.swing.JButton introMinusTLOU;

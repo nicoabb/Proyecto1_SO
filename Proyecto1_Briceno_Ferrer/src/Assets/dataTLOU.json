@@ -17,12 +17,12 @@
     {
       "category": "beginning",
       "driveGb": 50,
-      "amountProducers": 1
+      "amountProducers": 2
     },
     {
       "category": "ending",
       "driveGb": 55,
-      "amountProducers": 1
+      "amountProducers": 6
     },
     {
       "category": "plottwist",
@@ -31,6 +31,6 @@
     }
   ],
   "assemblers": {
-        "amountAssemblers": 1
+        "amountAssemblers": 2
   }
 }
