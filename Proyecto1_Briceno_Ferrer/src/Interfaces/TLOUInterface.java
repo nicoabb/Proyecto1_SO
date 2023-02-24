@@ -45,31 +45,37 @@ public class TLOUInterface extends javax.swing.JFrame {
     
     //Datos del Productor de Intro TLOU
     private ProdIntroTLOU prodIntroTLOU;
+    private ProdIntroTLOU arrayIntroTLOU[];
     private int introMaxDriveTLOU, introProdTLOU;
     private Semaphore mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU;
     
     //Datos del Productor de Creditos TLOU
     private ProdCreditTLOU prodCreditTLOU;
+    private ProdCreditTLOU arrayCreditTLOU[];
     private int creditMaxDriveTLOU, creditProdTLOU;
     private Semaphore mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU;
     
     //Datos del Productor de Inicio (Beggining) TLOU
     private ProdBegTLOU prodBegTLOU;
+    private ProdBegTLOU arrayBegTLOU[];
     private int begMaxDriveTLOU, begProdTLOU;
     private Semaphore mutexBegTLOU, semBegTLOU, semAssemBegTLOU;
     
     //Datos del Productor de Cierre (End) TLOU
     private ProdEndTLOU prodEndTLOU;
+    private ProdEndTLOU arrayEndTLOU[];
     private int endMaxDriveTLOU, endProdTLOU;
     private Semaphore mutexEndTLOU, semEndTLOU, semAssemEndTLOU;
     
     //Datos del Productor de Plot (Plot Twist) TLOU
     private ProdPlotTLOU prodPlotTLOU;
+    private ProdPlotTLOU arrayPlotTLOU[];
     private int plotMaxDriveTLOU, plotProdTLOU;
     private Semaphore mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU;
     
     //Datos del Ensamblador TLOU
     private AssemblerTLOU assemblerTLOU;
+    private AssemblerTLOU arrayAssemblerTLOU[];
     private Semaphore mutexAssembler;
     
     //Datos del Project Manager
@@ -135,7 +141,7 @@ public class TLOUInterface extends javax.swing.JFrame {
             }
 
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            
         }
         
         this.stop = false;
@@ -144,6 +150,8 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.mutexIntroTLOU = new Semaphore(1);
         this.semIntroTLOU = new Semaphore(introMaxDriveTLOU);
         this.semAssemIntroTLOU = new Semaphore(0);
+        this.arrayIntroTLOU = new ProdIntroTLOU[10];
+        
         this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
         prodIntroTLOU.start();
         
@@ -151,6 +159,8 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.mutexCreditTLOU = new Semaphore(1);
         this.semCreditTLOU = new Semaphore(creditMaxDriveTLOU);
         this.semAssemCreditTLOU = new Semaphore(0);
+        this.arrayCreditTLOU = new ProdCreditTLOU[10];
+        
         this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
         prodCreditTLOU.start();
         
@@ -158,6 +168,8 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.mutexBegTLOU = new Semaphore(1);
         this.semBegTLOU = new Semaphore(begMaxDriveTLOU);
         this.semAssemBegTLOU = new Semaphore(0);
+        this.arrayBegTLOU = new ProdBegTLOU[10];
+        
         this.prodBegTLOU = new ProdBegTLOU(dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
         prodBegTLOU.start();
         
@@ -165,6 +177,8 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.mutexEndTLOU = new Semaphore(1);
         this.semEndTLOU = new Semaphore(endMaxDriveTLOU);
         this.semAssemEndTLOU = new Semaphore(0);
+        this.arrayEndTLOU = new ProdEndTLOU[10];
+        
         this.prodEndTLOU = new ProdEndTLOU(dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
         prodEndTLOU.start();
         
@@ -172,11 +186,15 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.mutexPlotTLOU = new Semaphore(1);
         this.semPlotTLOU = new Semaphore(plotMaxDriveTLOU);
         this.semAssemPlotTLOU = new Semaphore(0);
+        this.arrayPlotTLOU = new ProdPlotTLOU[10];
+        
         this.prodPlotTLOU = new ProdPlotTLOU(dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
         prodPlotTLOU.start();
         
         //Creando Ensamblador TLOU
         this.mutexAssembler = new Semaphore(1);
+        this.arrayAssemblerTLOU = new AssemblerTLOU[10];
+        
         this.assemblerTLOU = new AssemblerTLOU(dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
         assemblerTLOU.start();
         
