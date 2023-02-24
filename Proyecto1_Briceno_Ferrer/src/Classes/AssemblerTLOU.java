@@ -13,7 +13,8 @@ import java.util.concurrent.Semaphore;
  * @author Nicolás Briceño
  */
 public class AssemblerTLOU extends Thread{
-    
+
+    private boolean stop;
     private int dayDuration;
     private double dailyProduce = 0.5; //Produce un capítulo cada 2 días
     private int numIntro = 1;
@@ -21,7 +22,6 @@ public class AssemblerTLOU extends Thread{
     private int numEnd = 2;
     private int numCredit = 1;
     private int numPlot = 2;
-    private boolean stop = false;
     
     private Semaphore mutexAssembler;
 
@@ -45,7 +45,8 @@ public class AssemblerTLOU extends Thread{
     private Semaphore semPlot; //Productor
     private Semaphore semAssemPlot; //Consumidor
 
-    public AssemblerTLOU(int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore semEnsIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore semEnsBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore semEnsEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore semEnsCredit, Semaphore mutexPlot, Semaphore semPlot, Semaphore semEnsPlot) {
+    public AssemblerTLOU(boolean stop, int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore semEnsIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore semEnsBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore semEnsEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore semEnsCredit, Semaphore mutexPlot, Semaphore semPlot, Semaphore semEnsPlot) {
+        this.stop = stop;
         this.dayDuration = dayDuration;
         this.mutexAssembler = mutexAssembler;
         this.mutexIntro = mutexIntro;

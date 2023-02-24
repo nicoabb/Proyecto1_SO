@@ -14,13 +14,13 @@ import java.util.concurrent.Semaphore;
  */
 public class ProdIntroTLOU extends Thread{
     
+    private boolean stop;
     private int dayDuration;
     private double dailyProduce = 1; //Produce 1 intro al día
     private Semaphore mutex, semPart, semAssembler;
-    private boolean stop;
 
-    public ProdIntroTLOU( int dayDuration, Semaphore mutexIntro, Semaphore semIntro, Semaphore semAssemIntro) {
-        this.stop = false;
+    public ProdIntroTLOU(boolean stop, int dayDuration, Semaphore mutexIntro, Semaphore semIntro, Semaphore semAssemIntro) {
+        this.stop = stop;
         this.dayDuration = dayDuration;
         this.mutex = mutexIntro;
         this.semPart = semIntro;

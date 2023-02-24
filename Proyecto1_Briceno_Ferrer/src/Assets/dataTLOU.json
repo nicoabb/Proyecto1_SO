@@ -1,33 +1,33 @@
 {
   "days": {
-    "dayDuration": 10000,
+    "dayDuration": 2,
     "counter": 30
   },
   "producers": [
     {
       "category": "intro",
       "driveGb": 30,
-      "amountProducers": 3
+      "amountProducers": 1
     },
     {
       "category": "credits",
       "driveGb": 25,
-      "amountProducers": 3
+      "amountProducers": 1
     },
     {
       "category": "beginning",
       "driveGb": 50,
-      "amountProducers": 6
+      "amountProducers": 1
     },
     {
       "category": "ending",
       "driveGb": 55,
-      "amountProducers": 5
+      "amountProducers": 1
     },
     {
       "category": "plottwist",
-      "driveGb": 30,
-      "amountProducers": 2
+      "driveGb": 40,
+      "amountProducers": 1
     }
   ],
   "assemblers": {

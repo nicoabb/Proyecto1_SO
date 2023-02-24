@@ -32,7 +32,6 @@ public class TLOUInterface extends javax.swing.JFrame {
     
     private boolean stop;
     private int dayDuration;
-    private int maxProdsTLOU; //Cantidad máxima de productores TLOU
     public static volatile int counter; //Contador del número de días restantes para el corte de comparación
     public static volatile int backupCounter; //El que guardará sin ser modificado la cantidad de días
     //Espacio en Drive
@@ -44,38 +43,39 @@ public class TLOUInterface extends javax.swing.JFrame {
     public static volatile int chaptersTLOU = 0;
     
     //Datos del Productor de Intro TLOU
-    private ProdIntroTLOU prodIntroTLOU;
+    //private ProdIntroTLOU prodIntroTLOU;
     private ProdIntroTLOU arrayIntroTLOU[];
     private int introMaxDriveTLOU, introProdTLOU;
     private Semaphore mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU;
     
     //Datos del Productor de Creditos TLOU
-    private ProdCreditTLOU prodCreditTLOU;
+    //private ProdCreditTLOU prodCreditTLOU;
     private ProdCreditTLOU arrayCreditTLOU[];
     private int creditMaxDriveTLOU, creditProdTLOU;
     private Semaphore mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU;
     
     //Datos del Productor de Inicio (Beggining) TLOU
-    private ProdBegTLOU prodBegTLOU;
+    //private ProdBegTLOU prodBegTLOU;
     private ProdBegTLOU arrayBegTLOU[];
     private int begMaxDriveTLOU, begProdTLOU;
     private Semaphore mutexBegTLOU, semBegTLOU, semAssemBegTLOU;
     
     //Datos del Productor de Cierre (End) TLOU
-    private ProdEndTLOU prodEndTLOU;
+    //private ProdEndTLOU prodEndTLOU;
     private ProdEndTLOU arrayEndTLOU[];
     private int endMaxDriveTLOU, endProdTLOU;
     private Semaphore mutexEndTLOU, semEndTLOU, semAssemEndTLOU;
     
     //Datos del Productor de Plot (Plot Twist) TLOU
-    private ProdPlotTLOU prodPlotTLOU;
+    //private ProdPlotTLOU prodPlotTLOU;
     private ProdPlotTLOU arrayPlotTLOU[];
     private int plotMaxDriveTLOU, plotProdTLOU;
     private Semaphore mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU;
     
     //Datos del Ensamblador TLOU
-    private AssemblerTLOU assemblerTLOU;
+    //private AssemblerTLOU assemblerTLOU;
     private AssemblerTLOU arrayAssemblerTLOU[];
+    private int assemblersTLOU;
     private Semaphore mutexAssembler;
     
     //Datos del Project Manager
@@ -94,18 +94,18 @@ public class TLOUInterface extends javax.swing.JFrame {
     }
     
     public void readJson() {
-        //Con el JSON tienen que cambiarse los valores de abajo
         
         JSONParser parser = new JSONParser();
-
-        try ( Reader reader = new FileReader("src/data.json")) {
-
+        
+        try ( Reader reader = new FileReader("src/Assets/dataTLOU.json")) {
+            
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
             JSONObject dayObj = (JSONObject) jsonObject.get("days");
-            dayDuration = ((Long) dayObj.get("dayDuration")).intValue();
-            counter = ((Long) dayObj.get("counter")).intValue();
-            backupCounter = counter;
+            this.dayDuration = ((Long) dayObj.get("dayDuration")).intValue();
+            System.out.println("Logre sacar la duración del día y es: " + dayDuration);
+            TLOUInterface.counter = ((Long) dayObj.get("counter")).intValue();
+            TLOUInterface.backupCounter = counter;
 
             JSONArray producersArray = (JSONArray) jsonObject.get("producers");
 
@@ -139,9 +139,13 @@ public class TLOUInterface extends javax.swing.JFrame {
                     TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
                 }
             }
+            
+            JSONObject assemblyObj = (JSONObject) jsonObject.get("assemblers");
+            this.assemblersTLOU = ((Long) assemblyObj.get("amountAssemblers")).intValue();
+            TLOUInterface.numProdAssemblers.setText(Integer.toString(assemblersTLOU));
 
         } catch (IOException | ParseException e) {
-            
+            System.out.println("Estoy poteando");
         }
         
         this.stop = false;
@@ -152,17 +156,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.semAssemIntroTLOU = new Semaphore(0);
         this.arrayIntroTLOU = new ProdIntroTLOU[10];
         
-        this.prodIntroTLOU = new ProdIntroTLOU(dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
-        prodIntroTLOU.start();
-        
         //Creando ProdCreditTLOU
         this.mutexCreditTLOU = new Semaphore(1);
         this.semCreditTLOU = new Semaphore(creditMaxDriveTLOU);
         this.semAssemCreditTLOU = new Semaphore(0);
         this.arrayCreditTLOU = new ProdCreditTLOU[10];
-        
-        this.prodCreditTLOU = new ProdCreditTLOU(dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
-        prodCreditTLOU.start();
         
         //Creando ProdBegTLOU
         this.mutexBegTLOU = new Semaphore(1);
@@ -170,17 +168,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.semAssemBegTLOU = new Semaphore(0);
         this.arrayBegTLOU = new ProdBegTLOU[10];
         
-        this.prodBegTLOU = new ProdBegTLOU(dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
-        prodBegTLOU.start();
-        
         //Creando ProdEndTLOU
         this.mutexEndTLOU = new Semaphore(1);
         this.semEndTLOU = new Semaphore(endMaxDriveTLOU);
         this.semAssemEndTLOU = new Semaphore(0);
         this.arrayEndTLOU = new ProdEndTLOU[10];
-        
-        this.prodEndTLOU = new ProdEndTLOU(dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
-        prodEndTLOU.start();
         
         //Creando ProdPlotTLOU
         this.mutexPlotTLOU = new Semaphore(1);
@@ -188,27 +180,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.semAssemPlotTLOU = new Semaphore(0);
         this.arrayPlotTLOU = new ProdPlotTLOU[10];
         
-        this.prodPlotTLOU = new ProdPlotTLOU(dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
-        prodPlotTLOU.start();
-        
         //Creando Ensamblador TLOU
         this.mutexAssembler = new Semaphore(1);
         this.arrayAssemblerTLOU = new AssemblerTLOU[10];
         
-        this.assemblerTLOU = new AssemblerTLOU(dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
-        assemblerTLOU.start();
-        
-        //Creando Project Manager TLOU
-        this.stateMutexTLOU = new Semaphore(1);
-        this.countMutexTLOU = new Semaphore(1);
-        this.pmTLOU = new ProjectManagerTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU);
-        pmTLOU.start();
-        
-        //Creando Director TLOU
-        this.dirTLOU = new DirectorTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU, pmTLOU);
-        dirTLOU.start();
-        
-        }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -221,14 +197,16 @@ public class TLOUInterface extends javax.swing.JFrame {
 
         jLabel2 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        numIntroTLOU1 = new javax.swing.JLabel();
-        introMinusTLOU2 = new javax.swing.JButton();
+        costAssemblerTLOU = new javax.swing.JLabel();
+        begMinusTLOU = new javax.swing.JButton();
         numProdBeg = new javax.swing.JLabel();
-        introPlusTLOU2 = new javax.swing.JButton();
+        begPlusTLOU = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        introMinusTLOU1 = new javax.swing.JButton();
+        creditMinusTLOU = new javax.swing.JButton();
         numProdCredit = new javax.swing.JLabel();
-        introPlusTLOU1 = new javax.swing.JButton();
+        creditPlusTLOU = new javax.swing.JButton();
+        startButton = new javax.swing.JToggleButton();
+        stopButton = new javax.swing.JToggleButton();
         jLabel13 = new javax.swing.JLabel();
         numProdIntro = new javax.swing.JLabel();
         numIntroTLOU = new javax.swing.JLabel();
@@ -258,17 +236,17 @@ public class TLOUInterface extends javax.swing.JFrame {
         introMinusTLOU = new javax.swing.JButton();
         introPlusTLOU = new javax.swing.JButton();
         numProdEnd = new javax.swing.JLabel();
-        introMinusTLOU3 = new javax.swing.JButton();
-        introPlusTLOU3 = new javax.swing.JButton();
+        endMinusTLOU = new javax.swing.JButton();
+        endPlusTLOU = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        introMinusTLOU4 = new javax.swing.JButton();
+        plotMinusTLOU = new javax.swing.JButton();
         numProdPlot = new javax.swing.JLabel();
-        introPlusTLOU4 = new javax.swing.JButton();
+        plotPlusTLOU = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
-        introMinusTLOU5 = new javax.swing.JButton();
+        assemblerMinusTLOU = new javax.swing.JButton();
         numProdAssemblers = new javax.swing.JLabel();
-        introPlusTLOU5 = new javax.swing.JButton();
+        assemblerPlusTLOU = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
@@ -277,11 +255,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
-        numIntroTLOU2 = new javax.swing.JLabel();
-        numIntroTLOU3 = new javax.swing.JLabel();
-        numIntroTLOU4 = new javax.swing.JLabel();
-        numIntroTLOU5 = new javax.swing.JLabel();
-        numIntroTLOU6 = new javax.swing.JLabel();
+        costIntroTLOU = new javax.swing.JLabel();
+        costCreditTLOU = new javax.swing.JLabel();
+        costBegTLOU = new javax.swing.JLabel();
+        costEndTLOU = new javax.swing.JLabel();
+        costPlotTLOU = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -302,17 +280,17 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel15.setText("Prod. Inicio:");
         getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 250, 150, 26));
 
-        numIntroTLOU1.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU1.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU1.setText("$ 0");
-        getContentPane().add(numIntroTLOU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 340, 40, 26));
+        costAssemblerTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costAssemblerTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costAssemblerTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costAssemblerTLOU.setText("$ 0");
+        getContentPane().add(costAssemblerTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 340, 40, 26));
 
-        introMinusTLOU2.setBackground(new java.awt.Color(204, 0, 0));
-        introMinusTLOU2.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
-        introMinusTLOU2.setForeground(new java.awt.Color(255, 255, 255));
-        introMinusTLOU2.setText("-");
-        getContentPane().add(introMinusTLOU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 250, -1, -1));
+        begMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
+        begMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
+        begMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        begMinusTLOU.setText("-");
+        getContentPane().add(begMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 250, -1, -1));
 
         numProdBeg.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         numProdBeg.setForeground(new java.awt.Color(102, 102, 102));
@@ -320,17 +298,17 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdBeg.setText("0");
         getContentPane().add(numProdBeg, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 250, 50, 30));
 
-        introPlusTLOU2.setBackground(new java.awt.Color(0, 102, 0));
-        introPlusTLOU2.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        introPlusTLOU2.setForeground(new java.awt.Color(255, 255, 255));
-        introPlusTLOU2.setText("+");
-        introPlusTLOU2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        introPlusTLOU2.addActionListener(new java.awt.event.ActionListener() {
+        begPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
+        begPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        begPlusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        begPlusTLOU.setText("+");
+        begPlusTLOU.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        begPlusTLOU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                introPlusTLOU2ActionPerformed(evt);
+                begPlusTLOUActionPerformed(evt);
             }
         });
-        getContentPane().add(introPlusTLOU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 250, -1, -1));
+        getContentPane().add(begPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 250, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(102, 102, 102));
@@ -338,11 +316,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel14.setText("Prod. Crédito:");
         getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 220, 150, 26));
 
-        introMinusTLOU1.setBackground(new java.awt.Color(204, 0, 0));
-        introMinusTLOU1.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
-        introMinusTLOU1.setForeground(new java.awt.Color(255, 255, 255));
-        introMinusTLOU1.setText("-");
-        getContentPane().add(introMinusTLOU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, -1, -1));
+        creditMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
+        creditMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
+        creditMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        creditMinusTLOU.setText("-");
+        getContentPane().add(creditMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, -1, -1));
 
         numProdCredit.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         numProdCredit.setForeground(new java.awt.Color(102, 102, 102));
@@ -350,17 +328,39 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdCredit.setText("0");
         getContentPane().add(numProdCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 50, 30));
 
-        introPlusTLOU1.setBackground(new java.awt.Color(0, 102, 0));
-        introPlusTLOU1.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        introPlusTLOU1.setForeground(new java.awt.Color(255, 255, 255));
-        introPlusTLOU1.setText("+");
-        introPlusTLOU1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        introPlusTLOU1.addActionListener(new java.awt.event.ActionListener() {
+        creditPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
+        creditPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        creditPlusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        creditPlusTLOU.setText("+");
+        creditPlusTLOU.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        creditPlusTLOU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                introPlusTLOU1ActionPerformed(evt);
+                creditPlusTLOUActionPerformed(evt);
             }
         });
-        getContentPane().add(introPlusTLOU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, -1));
+        getContentPane().add(creditPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, -1));
+
+        startButton.setBackground(new java.awt.Color(51, 51, 51));
+        startButton.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        startButton.setForeground(new java.awt.Color(153, 255, 153));
+        startButton.setText("START");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(startButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 80, 80, -1));
+
+        stopButton.setBackground(new java.awt.Color(51, 51, 51));
+        stopButton.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        stopButton.setForeground(new java.awt.Color(255, 153, 153));
+        stopButton.setText("STOP");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(stopButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 80, 80, -1));
 
         jLabel13.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(102, 102, 102));
@@ -533,23 +533,23 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdEnd.setText("0");
         getContentPane().add(numProdEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 280, 50, 30));
 
-        introMinusTLOU3.setBackground(new java.awt.Color(204, 0, 0));
-        introMinusTLOU3.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
-        introMinusTLOU3.setForeground(new java.awt.Color(255, 255, 255));
-        introMinusTLOU3.setText("-");
-        getContentPane().add(introMinusTLOU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 280, -1, -1));
+        endMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
+        endMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
+        endMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        endMinusTLOU.setText("-");
+        getContentPane().add(endMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 280, -1, -1));
 
-        introPlusTLOU3.setBackground(new java.awt.Color(0, 102, 0));
-        introPlusTLOU3.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        introPlusTLOU3.setForeground(new java.awt.Color(255, 255, 255));
-        introPlusTLOU3.setText("+");
-        introPlusTLOU3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        introPlusTLOU3.addActionListener(new java.awt.event.ActionListener() {
+        endPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
+        endPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        endPlusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        endPlusTLOU.setText("+");
+        endPlusTLOU.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        endPlusTLOU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                introPlusTLOU3ActionPerformed(evt);
+                endPlusTLOUActionPerformed(evt);
             }
         });
-        getContentPane().add(introPlusTLOU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 280, -1, -1));
+        getContentPane().add(endPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 280, -1, -1));
 
         jLabel16.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(102, 102, 102));
@@ -563,11 +563,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel17.setText("Prod. Plot Twist:");
         getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 310, 150, 26));
 
-        introMinusTLOU4.setBackground(new java.awt.Color(204, 0, 0));
-        introMinusTLOU4.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
-        introMinusTLOU4.setForeground(new java.awt.Color(255, 255, 255));
-        introMinusTLOU4.setText("-");
-        getContentPane().add(introMinusTLOU4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
+        plotMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
+        plotMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
+        plotMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        plotMinusTLOU.setText("-");
+        getContentPane().add(plotMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
 
         numProdPlot.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         numProdPlot.setForeground(new java.awt.Color(102, 102, 102));
@@ -575,17 +575,17 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdPlot.setText("0");
         getContentPane().add(numProdPlot, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 50, 30));
 
-        introPlusTLOU4.setBackground(new java.awt.Color(0, 102, 0));
-        introPlusTLOU4.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        introPlusTLOU4.setForeground(new java.awt.Color(255, 255, 255));
-        introPlusTLOU4.setText("+");
-        introPlusTLOU4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        introPlusTLOU4.addActionListener(new java.awt.event.ActionListener() {
+        plotPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
+        plotPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        plotPlusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        plotPlusTLOU.setText("+");
+        plotPlusTLOU.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        plotPlusTLOU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                introPlusTLOU4ActionPerformed(evt);
+                plotPlusTLOUActionPerformed(evt);
             }
         });
-        getContentPane().add(introPlusTLOU4, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 310, -1, -1));
+        getContentPane().add(plotPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 310, -1, -1));
 
         jLabel18.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(102, 102, 102));
@@ -593,11 +593,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel18.setText("Ensambladores:");
         getContentPane().add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 150, 26));
 
-        introMinusTLOU5.setBackground(new java.awt.Color(204, 0, 0));
-        introMinusTLOU5.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
-        introMinusTLOU5.setForeground(new java.awt.Color(255, 255, 255));
-        introMinusTLOU5.setText("-");
-        getContentPane().add(introMinusTLOU5, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, -1, -1));
+        assemblerMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
+        assemblerMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
+        assemblerMinusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        assemblerMinusTLOU.setText("-");
+        getContentPane().add(assemblerMinusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, -1, -1));
 
         numProdAssemblers.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         numProdAssemblers.setForeground(new java.awt.Color(102, 102, 102));
@@ -605,17 +605,17 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdAssemblers.setText("0");
         getContentPane().add(numProdAssemblers, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 340, 50, 30));
 
-        introPlusTLOU5.setBackground(new java.awt.Color(0, 102, 0));
-        introPlusTLOU5.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        introPlusTLOU5.setForeground(new java.awt.Color(255, 255, 255));
-        introPlusTLOU5.setText("+");
-        introPlusTLOU5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        introPlusTLOU5.addActionListener(new java.awt.event.ActionListener() {
+        assemblerPlusTLOU.setBackground(new java.awt.Color(0, 102, 0));
+        assemblerPlusTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        assemblerPlusTLOU.setForeground(new java.awt.Color(255, 255, 255));
+        assemblerPlusTLOU.setText("+");
+        assemblerPlusTLOU.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        assemblerPlusTLOU.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                introPlusTLOU5ActionPerformed(evt);
+                assemblerPlusTLOUActionPerformed(evt);
             }
         });
-        getContentPane().add(introPlusTLOU5, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 340, -1, -1));
+        getContentPane().add(assemblerPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 340, -1, -1));
 
         jLabel19.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(51, 51, 51));
@@ -665,35 +665,35 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel26.setText("Ensambladores:");
         getContentPane().add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, 150, 26));
 
-        numIntroTLOU2.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU2.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU2.setText("$ 0");
-        getContentPane().add(numIntroTLOU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, 40, 26));
+        costIntroTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costIntroTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costIntroTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costIntroTLOU.setText("$ 0");
+        getContentPane().add(costIntroTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, 40, 26));
 
-        numIntroTLOU3.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU3.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU3.setText("$ 0");
-        getContentPane().add(numIntroTLOU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 220, 40, 26));
+        costCreditTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costCreditTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costCreditTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costCreditTLOU.setText("$ 0");
+        getContentPane().add(costCreditTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 220, 40, 26));
 
-        numIntroTLOU4.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU4.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU4.setText("$ 0");
-        getContentPane().add(numIntroTLOU4, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 250, 40, 26));
+        costBegTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costBegTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costBegTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costBegTLOU.setText("$ 0");
+        getContentPane().add(costBegTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 250, 40, 26));
 
-        numIntroTLOU5.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU5.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU5.setText("$ 0");
-        getContentPane().add(numIntroTLOU5, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 280, 40, 26));
+        costEndTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costEndTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costEndTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costEndTLOU.setText("$ 0");
+        getContentPane().add(costEndTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 280, 40, 26));
 
-        numIntroTLOU6.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
-        numIntroTLOU6.setForeground(new java.awt.Color(102, 102, 102));
-        numIntroTLOU6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        numIntroTLOU6.setText("$ 0");
-        getContentPane().add(numIntroTLOU6, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 310, 40, 26));
+        costPlotTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        costPlotTLOU.setForeground(new java.awt.Color(102, 102, 102));
+        costPlotTLOU.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        costPlotTLOU.setText("$ 0");
+        getContentPane().add(costPlotTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 310, 40, 26));
 
         jLabel27.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
         jLabel27.setForeground(new java.awt.Color(51, 51, 51));
@@ -708,25 +708,87 @@ public class TLOUInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_introPlusTLOUActionPerformed
 
-    private void introPlusTLOU1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOU1ActionPerformed
+    private void creditPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditPlusTLOUActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_introPlusTLOU1ActionPerformed
+    }//GEN-LAST:event_creditPlusTLOUActionPerformed
 
-    private void introPlusTLOU2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOU2ActionPerformed
+    private void begPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_begPlusTLOUActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_introPlusTLOU2ActionPerformed
+    }//GEN-LAST:event_begPlusTLOUActionPerformed
 
-    private void introPlusTLOU3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOU3ActionPerformed
+    private void endPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endPlusTLOUActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_introPlusTLOU3ActionPerformed
+    }//GEN-LAST:event_endPlusTLOUActionPerformed
 
-    private void introPlusTLOU4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOU4ActionPerformed
+    private void plotPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotPlusTLOUActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_introPlusTLOU4ActionPerformed
+    }//GEN-LAST:event_plotPlusTLOUActionPerformed
 
-    private void introPlusTLOU5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introPlusTLOU5ActionPerformed
+    private void assemblerPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assemblerPlusTLOUActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_introPlusTLOU5ActionPerformed
+    }//GEN-LAST:event_assemblerPlusTLOUActionPerformed
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stopButtonActionPerformed
+
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+        if (!this.stop) {
+            
+            // Llenar arrays de productores
+            // Creando Intros
+            System.out.println("Productores de Intro: " + introProdTLOU);
+            for (int i = 0; i < introProdTLOU; i++) {
+                this.arrayIntroTLOU[i] = new ProdIntroTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                this.arrayIntroTLOU[i].start();
+            }
+            
+            // Creando Credits
+            System.out.println("Productores de Credit: " + creditProdTLOU);
+            for (int i = 0; i < creditProdTLOU; i++) {
+                this.arrayCreditTLOU[i] = new ProdCreditTLOU(stop, dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
+                this.arrayCreditTLOU[i].start();
+            }
+            
+            // Creando Beginnings
+            System.out.println("Productores de Beg: " + begProdTLOU);
+            for (int i = 0; i < begProdTLOU; i++) {
+                this.arrayBegTLOU[i] = new ProdBegTLOU(stop, dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
+                this.arrayBegTLOU[i].start();
+            }
+
+            // Creando Endings
+            System.out.println("Productores de End: " + endProdTLOU);
+            for (int i = 0; i < endProdTLOU; i++) {
+                this.arrayEndTLOU[i] = new ProdEndTLOU(stop, dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
+                this.arrayEndTLOU[i].start();
+            }
+
+            // Creando Plot twists
+            System.out.println("Productores de Plot: " + plotProdTLOU);
+            for (int i = 0; i < plotProdTLOU; i++) {
+                this.arrayPlotTLOU[i] = new ProdPlotTLOU(stop, dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+                this.arrayPlotTLOU[i].start();
+            }
+
+            // Creando Ensamblador
+            System.out.println("Ensambladores: " + introProdTLOU);
+            for (int i = 0; i < plotProdTLOU; i++) {
+                this.arrayAssemblerTLOU[i] = new AssemblerTLOU(stop, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+                this.arrayAssemblerTLOU[i].start();
+            }
+
+            // Creando Project Manager TLOU
+            this.stateMutexTLOU = new Semaphore(1);
+            this.countMutexTLOU = new Semaphore(1);
+            this.pmTLOU = new ProjectManagerTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU);
+            pmTLOU.start();
+
+            // Creando Director TLOU
+            this.dirTLOU = new DirectorTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU, pmTLOU);
+            dirTLOU.start();
+        }
+    }//GEN-LAST:event_startButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -769,21 +831,25 @@ public class TLOUInterface extends javax.swing.JFrame {
     private javax.swing.JLabel TLOUlogo1;
     private javax.swing.JLabel TLOUlogo2;
     private javax.swing.JLabel TLOUlogo3;
+    private javax.swing.JButton assemblerMinusTLOU;
+    private javax.swing.JButton assemblerPlusTLOU;
     private javax.swing.JLabel backgroundTLOU;
+    private javax.swing.JButton begMinusTLOU;
+    private javax.swing.JButton begPlusTLOU;
+    public static javax.swing.JLabel costAssemblerTLOU;
+    public static javax.swing.JLabel costBegTLOU;
+    public static javax.swing.JLabel costCreditTLOU;
+    public static javax.swing.JLabel costEndTLOU;
+    public static javax.swing.JLabel costIntroTLOU;
+    public static javax.swing.JLabel costPlotTLOU;
+    private javax.swing.JButton creditMinusTLOU;
+    private javax.swing.JButton creditPlusTLOU;
     public static javax.swing.JLabel daysCounter;
     public static javax.swing.JLabel dirState;
+    private javax.swing.JButton endMinusTLOU;
+    private javax.swing.JButton endPlusTLOU;
     private javax.swing.JButton introMinusTLOU;
-    private javax.swing.JButton introMinusTLOU1;
-    private javax.swing.JButton introMinusTLOU2;
-    private javax.swing.JButton introMinusTLOU3;
-    private javax.swing.JButton introMinusTLOU4;
-    private javax.swing.JButton introMinusTLOU5;
     private javax.swing.JButton introPlusTLOU;
-    private javax.swing.JButton introPlusTLOU1;
-    private javax.swing.JButton introPlusTLOU2;
-    private javax.swing.JButton introPlusTLOU3;
-    private javax.swing.JButton introPlusTLOU4;
-    private javax.swing.JButton introPlusTLOU5;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -815,12 +881,6 @@ public class TLOUInterface extends javax.swing.JFrame {
     public static javax.swing.JLabel numCreditTLOU;
     public static javax.swing.JLabel numEndTLOU;
     public static javax.swing.JLabel numIntroTLOU;
-    public static javax.swing.JLabel numIntroTLOU1;
-    public static javax.swing.JLabel numIntroTLOU2;
-    public static javax.swing.JLabel numIntroTLOU3;
-    public static javax.swing.JLabel numIntroTLOU4;
-    public static javax.swing.JLabel numIntroTLOU5;
-    public static javax.swing.JLabel numIntroTLOU6;
     public static javax.swing.JLabel numPlotTLOU;
     public static javax.swing.JLabel numProdAssemblers;
     public static javax.swing.JLabel numProdBeg;
@@ -828,6 +888,10 @@ public class TLOUInterface extends javax.swing.JFrame {
     public static javax.swing.JLabel numProdEnd;
     public static javax.swing.JLabel numProdIntro;
     public static javax.swing.JLabel numProdPlot;
+    private javax.swing.JButton plotMinusTLOU;
+    private javax.swing.JButton plotPlusTLOU;
     public static javax.swing.JLabel pmState;
+    private javax.swing.JToggleButton startButton;
+    private javax.swing.JToggleButton stopButton;
     // End of variables declaration//GEN-END:variables
 }

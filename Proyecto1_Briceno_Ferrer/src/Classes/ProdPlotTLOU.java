@@ -13,13 +13,14 @@ import java.util.concurrent.Semaphore;
  * @author Nicolás Briceño
  */
 public class ProdPlotTLOU extends Thread{
-     private int dayDuration;
+    
+    private boolean stop;
+    private int dayDuration;
     private double dailyProduce = 0.5; //Produce 1 cierre cada 4 días
     private Semaphore mutex, semPart, semAssembler;
-    private boolean stop;
 
-    public ProdPlotTLOU( int dayDuration, Semaphore mutexPlot, Semaphore semPlot, Semaphore semAssemPlot) {
-        this.stop = false;
+    public ProdPlotTLOU(boolean stop, int dayDuration, Semaphore mutexPlot, Semaphore semPlot, Semaphore semAssemPlot) {
+        this.stop = stop;
         this.dayDuration = dayDuration;
         this.mutex = mutexPlot;
         this.semPart = semPlot;

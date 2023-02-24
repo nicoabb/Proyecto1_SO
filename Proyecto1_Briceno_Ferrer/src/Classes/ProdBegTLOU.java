@@ -14,12 +14,12 @@ import java.util.concurrent.Semaphore;
  */
 public class ProdBegTLOU extends Thread{
     
+    private boolean stop;
     private int dayDuration;
     private double dailyProduce = 0.5; //Produce 1 inicio cada 2 días
     private Semaphore mutex, semPart, semAssembler;
-    private boolean stop;
 
-    public ProdBegTLOU( int dayDuration, Semaphore mutexBeg, Semaphore semBeg, Semaphore semAssemBeg) {
+    public ProdBegTLOU(boolean stop, int dayDuration, Semaphore mutexBeg, Semaphore semBeg, Semaphore semAssemBeg) {
         this.stop = false;
         this.dayDuration = dayDuration;
         this.mutex = mutexBeg;
