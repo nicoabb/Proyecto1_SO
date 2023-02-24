@@ -985,6 +985,13 @@ public class TLOUInterface extends javax.swing.JFrame {
             this.pmTLOU.setStart(start);
             this.admin.setStart(start);
             
+            //Imprimir resultados en Dashboard
+            Dashboard.chaptersMadeTLOU.setText(Integer.toString(totalChapters));
+            int sumCosts = costIntro + costCredit + costBeg + costEnd + costPlot + costAssembler + salaryDir + (salaryPM - numFaults);
+            Dashboard.costsTLOU.setText(Integer.toString(sumCosts));
+            int sumEarnings = totalChapters * ((1100000 / 150000) * 100000);
+            Dashboard.earningsTLOU.setText(Integer.toString(sumEarnings));
+            Dashboard.balanceTLOU.setText(Integer.toString(sumEarnings - sumCosts));
     }//GEN-LAST:event_stopButtonActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
@@ -1227,7 +1234,7 @@ public class TLOUInterface extends javax.swing.JFrame {
     private javax.swing.JButton plotPlusTLOU;
     public static javax.swing.JLabel pmState;
     private javax.swing.JToggleButton startButton;
-    private javax.swing.JToggleButton stopButton;
+    public static javax.swing.JToggleButton stopButton;
     public static javax.swing.JLabel totalChaptersLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -43,10 +43,19 @@ public class DirectorTLOU extends Thread{
                 //Director revisa el contador
                 countMutex.acquire();
                 if(TLOUInterface.counter <= 0) {
+                    //COMENTAR EL DO CLICK SI QUIERES QUE DURE MÁS DE 1 CONTEO
+                    TLOUInterface.stopButton.doClick();
+                    
                     TLOUInterface.dirState.setText("Entregando capítulos a HBO MAX");
+                    
+                    //Reiniciando conteo
                     TLOUInterface.chaptersTLOU = 0;
                     TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
+                    
+                    //Actualizando capítulos totales
                     TLOUInterface.totalChaptersLabel.setText(Integer.toString(TLOUInterface.totalChapters));
+                    
+                    //Sumando las ganancias por capítulo
                     TLOUInterface.incomeChapters = TLOUInterface.totalChapters * ((1100000 / 150000) * 100000);
                     TLOUInterface.incomeChaptersLabel.setText("$ " + Integer.toString(TLOUInterface.incomeChapters));
                     TLOUInterface.counter = TLOUInterface.backupCounter;

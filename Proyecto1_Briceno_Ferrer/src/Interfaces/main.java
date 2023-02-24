@@ -79,7 +79,7 @@ public class main extends javax.swing.JFrame {
     private void TLOUbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TLOUbuttonActionPerformed
         tlou.setVisible(true);
         dash.setVisible(false);
-        //got.setVisible(false);
+        got.setVisible(false);
         
         
     }//GEN-LAST:event_TLOUbuttonActionPerformed
@@ -87,7 +87,7 @@ public class main extends javax.swing.JFrame {
     private void DashboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DashboardButtonActionPerformed
         tlou.setVisible(false);
         dash.setVisible(true);
-        //got.setVisible(false);
+        got.setVisible(false);
     }//GEN-LAST:event_DashboardButtonActionPerformed
 
     private void GOTbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GOTbuttonActionPerformed
