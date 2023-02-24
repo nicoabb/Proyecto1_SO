@@ -122,6 +122,7 @@ public class AssemblerTLOU extends Thread{
                 mutexAssembler.acquire();
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 TLOUInterface.chaptersTLOU += 1;
+                TLOUInterface.totalChapters += 1;
                 TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
                 mutexAssembler.release();
 

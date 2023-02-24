@@ -46,6 +46,9 @@ public class DirectorTLOU extends Thread{
                     TLOUInterface.dirState.setText("Entregando capítulos a HBO MAX");
                     TLOUInterface.chaptersTLOU = 0;
                     TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
+                    TLOUInterface.totalChaptersLabel.setText(Integer.toString(TLOUInterface.totalChapters));
+                    TLOUInterface.incomeChapters = TLOUInterface.totalChapters * ((1100000 / 150000) * 100000);
+                    TLOUInterface.incomeChaptersLabel.setText("$ " + Integer.toString(TLOUInterface.incomeChapters));
                     TLOUInterface.counter = TLOUInterface.backupCounter;
                     TLOUInterface.daysCounter.setText(Integer.toString(TLOUInterface.counter));
                 }
@@ -60,6 +63,8 @@ public class DirectorTLOU extends Thread{
                     stateMutex.acquire();
                     if(proManager.state.contains("Viendo Rick y Morty")){
                         TLOUInterface.dirState.setText("¡Atrapado!");
+                        TLOUInterface.numFaults++;
+                        TLOUInterface.penalizationLabel.setText("$ " + Integer.toString(TLOUInterface.numFaults));
                     }
                     stateMutex.release();
                     
