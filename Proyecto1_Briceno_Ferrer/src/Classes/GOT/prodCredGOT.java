@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
 import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
@@ -12,18 +12,19 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
-public class prodIntroGOT extends Thread {
-    private boolean stop;
+public class prodCredGOT extends Thread {
+
     private Semaphore mutex;
-    private Semaphore semIntro;
-    private int introsPerDay = 3;
+    private boolean stop;
+    private Semaphore semCred;
+    private int credsPerDay = 3;
     private Semaphore semEns;
     
-    public prodIntroGOT(Semaphore mutex, Semaphore semIntro, Semaphore semEns) {
+    public prodCredGOT(Semaphore mutex, Semaphore semCred, Semaphore semEns) {
         this.mutex = mutex;
-        this.semIntro = semIntro;
+        this.semCred = semCred;
         this.semEns = semEns;
     }
     
@@ -31,20 +32,16 @@ public class prodIntroGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
-                    
-//                    System.out.println(count);
-                    semIntro.acquire();
-//                    System.out.println("A esperar");
-                    Thread.sleep(Math.round(GOTInterface.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
+                    semCred.acquire();
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration/ credsPerDay)); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
                     
                     mutex.acquire();
-                    
-                    GOTInterface.introsProducedGOT++;
-                    GOTInterface.qtyIntrosGOT.setText(Integer.toString(GOTInterface.introsProducedGOT));
+
+                    Interfaces.GOTInterface.credsProducedGOT++;
+                    Interfaces.GOTInterface.qtyCredGOT.setText(Integer.toString(Interfaces.GOTInterface.credsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
-//                    System.out.println("Creado!");
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

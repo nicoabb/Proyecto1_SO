@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
@@ -11,20 +11,19 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
-public class prodBegGOT extends Thread {
+public class prodPlotGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop;
-    private Semaphore semBeg;
-    private double begsPerDay = 0.25;
+    private Semaphore semPlot;
+    private double plotsPerDay = 0.33333;
     private Semaphore semEns;
     
-    public prodBegGOT(Semaphore mutex, Semaphore semBeg, Semaphore semEns) {
-        
+    public prodPlotGOT(Semaphore mutex, Semaphore semPlot, Semaphore semEns) {
         this.mutex = mutex;
-        this.semBeg = semBeg;
+        this.semPlot = semPlot;
         this.semEns = semEns;
     }
     
@@ -32,13 +31,13 @@ public class prodBegGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
-                    semBeg.acquire();
-                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
+                    semPlot.acquire();
                     
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
-                    Interfaces.GOTInterface.begsProducedGOT++;
-                    Interfaces.GOTInterface.qtyBegsGOT.setText(Integer.toString(Interfaces.GOTInterface.begsProducedGOT));
+                    Interfaces.GOTInterface.plotsProducedGOT++;
+                    Interfaces.GOTInterface.qtyPlotsGOT.setText(Integer.toString(Interfaces.GOTInterface.plotsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -49,7 +48,7 @@ public class prodBegGOT extends Thread {
 
     }
     
-    public void setStop (boolean stop) {
+    public void setStop(boolean stop) {
         this.stop = stop;
     }
     

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
 import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
 public class ProjectManagerGOT extends Thread {
 
@@ -21,6 +21,7 @@ public class ProjectManagerGOT extends Thread {
     public int waste = 0;
     public boolean watchingRaM;
     public boolean checkingSprints;
+    public boolean stop;
 
     public ProjectManagerGOT(Semaphore counter, Semaphore counterMutex) {
         this.counter = counter;
@@ -29,7 +30,7 @@ public class ProjectManagerGOT extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (!stop) {
 
             try {
                 GOTInterface.counterPMGOT = counter.availablePermits();
@@ -37,7 +38,7 @@ public class ProjectManagerGOT extends Thread {
                 while (waste <= 35) {
                     watchingRaM = true;
 //                    System.out.println("viendo rikimorti");
-                    Thread.sleep((long) (GOTInterface.hourDuration * 0.4)); // dividir el dia en horas y luego la hora en 24 minutos
+                    Thread.sleep((long) (GOTInterface.hourDuration * 0.4));
                     watchingRaM = false;
                     waste++;
 
@@ -47,7 +48,7 @@ public class ProjectManagerGOT extends Thread {
 
                     checkingSprints = true;
 //                    System.out.println("sprinteando");
-                    Thread.sleep((long) (GOTInterface.hourDuration * 0.4)); // dividir el dia en horas y luego la hora en 24 minutos
+                    Thread.sleep((long) (GOTInterface.hourDuration * 0.4));
                     checkingSprints = false;
                     waste++;
                 }
@@ -70,6 +71,10 @@ public class ProjectManagerGOT extends Thread {
             }
 
         }
+    }
+    
+    public void setStop(boolean stop) {
+        this.stop = stop;
     }
 
 }

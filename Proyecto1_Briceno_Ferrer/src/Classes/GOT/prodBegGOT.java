@@ -3,28 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
-import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
-public class prodCredGOT extends Thread {
+public class prodBegGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop;
-    private Semaphore semCred;
-    private int credsPerDay = 3;
+    private Semaphore semBeg;
+    private double begsPerDay = 0.25;
     private Semaphore semEns;
     
-    public prodCredGOT(Semaphore mutex, Semaphore semCred, Semaphore semEns) {
+    public prodBegGOT(Semaphore mutex, Semaphore semBeg, Semaphore semEns) {
+        
         this.mutex = mutex;
-        this.semCred = semCred;
+        this.semBeg = semBeg;
         this.semEns = semEns;
     }
     
@@ -32,13 +32,13 @@ public class prodCredGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
-                    semCred.acquire();
-                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration/ credsPerDay)); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
+                    semBeg.acquire();
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
                     
                     mutex.acquire();
 
-                    Interfaces.GOTInterface.credsProducedGOT++;
-                    Interfaces.GOTInterface.qtyCredGOT.setText(Integer.toString(Interfaces.GOTInterface.credsProducedGOT));
+                    Interfaces.GOTInterface.begsProducedGOT++;
+                    Interfaces.GOTInterface.qtyBegsGOT.setText(Integer.toString(Interfaces.GOTInterface.begsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -49,7 +49,7 @@ public class prodCredGOT extends Thread {
 
     }
     
-    public void setStop(boolean stop) {
+    public void setStop (boolean stop) {
         this.stop = stop;
     }
     

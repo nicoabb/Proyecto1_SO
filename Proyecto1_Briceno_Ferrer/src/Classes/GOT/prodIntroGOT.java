@@ -3,27 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
+import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
-public class prodEndGOT extends Thread {
-
-    private Semaphore mutex;
+public class prodIntroGOT extends Thread {
     private boolean stop;
-    private Semaphore semEnd;
-    private double endsPerDay = 0.33333;
+    private Semaphore mutex;
+    private Semaphore semIntro;
+    private int introsPerDay = 3;
     private Semaphore semEns;
     
-    public prodEndGOT(Semaphore mutex, Semaphore semEnd, Semaphore semEns) {
+    public prodIntroGOT(Semaphore mutex, Semaphore semIntro, Semaphore semEns) {
         this.mutex = mutex;
-        this.semEnd = semEnd;
+        this.semIntro = semIntro;
         this.semEns = semEns;
     }
     
@@ -31,16 +31,20 @@ public class prodEndGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
-                    semEnd.acquire();
                     
-                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
+//                    System.out.println(count);
+                    semIntro.acquire();
+//                    System.out.println("A esperar");
+                    Thread.sleep(Math.round(GOTInterface.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
+                    
                     mutex.acquire();
-
-                    Interfaces.GOTInterface.endsProducedGOT++;
-                    Interfaces.GOTInterface.qtyEndsGOT.setText(Integer.toString(Interfaces.GOTInterface.endsProducedGOT));
+                    
+                    GOTInterface.introsProducedGOT++;
+                    GOTInterface.qtyIntrosGOT.setText(Integer.toString(GOTInterface.introsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
+//                    System.out.println("Creado!");
                 } catch (InterruptedException ex) {
                     Logger.getLogger(prodIntroGOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

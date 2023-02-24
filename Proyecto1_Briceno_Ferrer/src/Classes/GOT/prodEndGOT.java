@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
@@ -11,19 +11,19 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
-public class prodPlotGOT extends Thread {
+public class prodEndGOT extends Thread {
 
     private Semaphore mutex;
     private boolean stop;
-    private Semaphore semPlot;
-    private double plotsPerDay = 0.33333;
+    private Semaphore semEnd;
+    private double endsPerDay = 0.33333;
     private Semaphore semEns;
     
-    public prodPlotGOT(Semaphore mutex, Semaphore semPlot, Semaphore semEns) {
+    public prodEndGOT(Semaphore mutex, Semaphore semEnd, Semaphore semEns) {
         this.mutex = mutex;
-        this.semPlot = semPlot;
+        this.semEnd = semEnd;
         this.semEns = semEns;
     }
     
@@ -31,13 +31,13 @@ public class prodPlotGOT extends Thread {
     public void run() {
         while(!stop) {
                 try {
-                    semPlot.acquire();
+                    semEnd.acquire();
                     
-                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
-                    Interfaces.GOTInterface.plotsProducedGOT++;
-                    Interfaces.GOTInterface.qtyPlotsGOT.setText(Integer.toString(Interfaces.GOTInterface.plotsProducedGOT));
+                    Interfaces.GOTInterface.endsProducedGOT++;
+                    Interfaces.GOTInterface.qtyEndsGOT.setText(Integer.toString(Interfaces.GOTInterface.endsProducedGOT));
                     
                     mutex.release();
                     semEns.release();

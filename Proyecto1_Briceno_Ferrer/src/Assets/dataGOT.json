@@ -26,8 +26,11 @@
     },
     {
       "category": "plottwist",
-      "driveGb": 40,
+      "driveGb": 30,
       "amountProducers": 2
     }
-  ]
+  ],
+  "assemblers": {
+    "amountAssemblers": 3
+  }
 }

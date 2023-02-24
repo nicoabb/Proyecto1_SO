@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.GOT;
 
 import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author emilo
+ * @author Emilio Ferrer
  */
 public class assemblerGOT extends Thread {
 
@@ -24,7 +24,7 @@ public class assemblerGOT extends Thread {
     private int cantCredsGOT = 1; // 1 creditos por capitulo
     private int cantPlotsGOT = 2; // 2 pt por capitulo (SOLO c/5)
 
-    private boolean stop = false;
+    private boolean stop;
 
     private Semaphore assemblerMutexGOT; // Mutex de ensambladores de contenido, asi solo uno puede ensamblar a la vez
 
@@ -96,7 +96,7 @@ public class assemblerGOT extends Thread {
                 semEnsBegGOT.acquire(cantBegsGOT);
                 semEnsCredGOT.acquire(cantCredsGOT);
 
-                if (chapterCounter % 5 != 0) {
+                if (GOTInterface.chaptersProducedGOT % 5 != 0) {
                     semEnsPlotGOT.acquire(cantPlotsGOT);
                 } else {
                     semEnsEndGOT.acquire(cantEndsGOT);
@@ -120,15 +120,15 @@ public class assemblerGOT extends Thread {
                 // Credits
                 semCredMutexGOT.acquire(); // Entro en CS de Endings
                 GOTInterface.credsProducedGOT -= cantCredsGOT;
-                GOTInterface.qtyProdCredsGOTLabel.setText(Integer.toString(GOTInterface.credsProducedGOT));
+                GOTInterface.qtyCredGOT.setText(Integer.toString(GOTInterface.credsProducedGOT));
                 semCredMutexGOT.release();
                 semCredGOT.release(cantCredsGOT);
 
-                if (chapterCounter % 5 == 0) { // Si es un episodio multiplo de 5 tocan 2 plot
+                if (GOTInterface.chaptersProducedGOT % 5 == 0) { // Si es un episodio multiplo de 5 tocan 2 plot
                     // Plot twists
                     semPlotMutexGOT.acquire();
                     GOTInterface.plotsProducedGOT -= cantPlotsGOT;
-                    GOTInterface.qtyProdPlotsGOTLabel.setText(Integer.toString(GOTInterface.plotsProducedGOT));
+                    GOTInterface.qtyPlotsGOT.setText(Integer.toString(GOTInterface.plotsProducedGOT));
                     semPlotMutexGOT.release();
                     semPlotGOT.release(cantPlotsGOT);
                 } else { // Si no es un episodio multiplo de 5 sale 2 endings normales
@@ -143,13 +143,18 @@ public class assemblerGOT extends Thread {
                 assemblerMutexGOT.acquire();
                 GOTInterface.chaptersProducedGOT ++;
                 GOTInterface.chaptersMade.setText(Integer.toString(GOTInterface.chaptersProducedGOT));
-                chapterCounter++;
+                
+                
                 assemblerMutexGOT.release();
             } catch (InterruptedException ex) {
                 Logger.getLogger(assemblerGOT.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
+    }
+    
+    public void setStop(boolean stop){
+        this.stop = stop;
     }
     
 }
