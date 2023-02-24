@@ -45,7 +45,9 @@ public class DirectorTLOU extends Thread{
                 if(TLOUInterface.counter <= 0) {
                     TLOUInterface.dirState.setText("Entregando capítulos a HBO MAX");
                     TLOUInterface.chaptersTLOU = 0;
+                    TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
                     TLOUInterface.counter = TLOUInterface.backupCounter;
+                    TLOUInterface.daysCounter.setText(Integer.toString(TLOUInterface.counter));
                 }
                 countMutex.release();
                                                 
