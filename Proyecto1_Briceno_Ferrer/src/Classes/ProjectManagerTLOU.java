@@ -15,7 +15,7 @@ import java.util.concurrent.Semaphore;
 public class ProjectManagerTLOU extends Thread{
     
     private int dayDuration;
-    private boolean stop;
+    private boolean start;
     private Semaphore countMutex; 
     private int remainderTime;  //Cantidad de horas para alternar entre ver Rick y Morty y revisar sprints reviews
     public String state; //Estado del PM (RyM o sprints reviews)
@@ -23,9 +23,9 @@ public class ProjectManagerTLOU extends Thread{
     private int eqHour; //Horas equivalentes para la duración del día
     private int eqMinute; //Minutos equivalentes para la duración del día
     
-    public ProjectManagerTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex) {
+    public ProjectManagerTLOU(boolean start, int dayDuration, Semaphore countMutex, Semaphore stateMutex) {
         this.dayDuration = (dayDuration * 1000);
-        this.stop = stop;
+        this.start = start;
         this.countMutex = countMutex;
         this.stateMutex = stateMutex;
         this.eqHour = this.dayDuration / 24;
@@ -36,7 +36,7 @@ public class ProjectManagerTLOU extends Thread{
     
     @Override
     public void run() {
-        while(!stop){
+        while(start){
             try {
                 //Project Manager cambia el contador
                 
@@ -81,6 +81,11 @@ public class ProjectManagerTLOU extends Thread{
         
         }
     }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+    
     
     
 }

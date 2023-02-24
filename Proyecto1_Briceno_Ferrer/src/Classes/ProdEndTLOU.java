@@ -14,13 +14,13 @@ import java.util.concurrent.Semaphore;
  */
 public class ProdEndTLOU extends Thread{
     
-    private boolean stop;
+    private boolean start;
     private int dayDuration;
     private double dailyProduce = 0.25; //Produce 1 cierre cada 4 días
     private Semaphore mutex, semPart, semAssembler;
 
-    public ProdEndTLOU(boolean stop, int dayDuration, Semaphore mutexEnd, Semaphore semEnd, Semaphore semAssemEnd) {
-        this.stop = stop;
+    public ProdEndTLOU(boolean start, int dayDuration, Semaphore mutexEnd, Semaphore semEnd, Semaphore semAssemEnd) {
+        this.start = start;
         this.dayDuration = dayDuration;
         this.mutex = mutexEnd;
         this.semPart = semEnd;
@@ -30,7 +30,7 @@ public class ProdEndTLOU extends Thread{
     
     @Override
     public void run() {
-        while (!stop) {
+        while (start) {
             try {
                 semPart.acquire();
                 
@@ -48,4 +48,11 @@ public class ProdEndTLOU extends Thread{
             }
         }
     }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+    
+    
+    
 }

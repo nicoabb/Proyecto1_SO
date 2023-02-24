@@ -30,11 +30,11 @@ import org.json.simple.parser.ParseException;
  */
 public class TLOUInterface extends javax.swing.JFrame {
     
-    private boolean stop = false;
+    private boolean start = true;
     private int dayDuration;
     public static volatile int counter; //Contador del número de días restantes para el corte de comparación
     public static volatile int backupCounter; //El que guardará sin ser modificado la cantidad de días
-    private int AvailableProds = 0;
+    private int AvailableProds = 10;
 
     //Espacio en Drive
     public static volatile int introDriveTLOU = 0;
@@ -116,28 +116,45 @@ public class TLOUInterface extends javax.swing.JFrame {
                 String category = (String) producer.get("category");
                 if (category.equals("intro")) {
                     this.introMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
-                    this.introProdTLOU = ((Long) producer.get("amountProducers")).intValue();
-                    TLOUInterface.numProdIntro.setText(Integer.toString(introProdTLOU));
-
+                    if(AvailableProds < 10) {
+                        this.introProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                        TLOUInterface.numProdIntro.setText(Integer.toString(introProdTLOU));
+                        AvailableProds -= introProdTLOU;
+                    } else {
+                        throw new IOException();
+                    }
                 } else if (category.equals("credits")) {
                     this.creditMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
-                    this.creditProdTLOU = ((Long) producer.get("amountProducers")).intValue();;
-                    TLOUInterface.numProdCredit.setText(Integer.toString(creditProdTLOU));
-
+                    if(AvailableProds < 10) {
+                        this.creditProdTLOU = ((Long) producer.get("amountProducers")).intValue();;
+                        TLOUInterface.numProdCredit.setText(Integer.toString(creditProdTLOU));
+                    } else {
+                        throw new IOException();
+                    }
                 } else if (category.equals("beginning")) {
                     this.begMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
-                    this.begProdTLOU = ((Long) producer.get("amountProducers")).intValue();
-                    TLOUInterface.numProdBeg.setText(Integer.toString(begProdTLOU));
-
+                    if(AvailableProds < 10) {
+                        this.begProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                        TLOUInterface.numProdBeg.setText(Integer.toString(begProdTLOU));
+                    } else {
+                        throw new IOException();
+                    }
                 } else if (category.equals("ending")) {
                     this.endMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
-                    this.endProdTLOU = ((Long) producer.get("amountProducers")).intValue();
-                    TLOUInterface.numProdEnd.setText(Integer.toString(endProdTLOU));
-
+                    if(AvailableProds < 10) {
+                        this.endProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                        TLOUInterface.numProdEnd.setText(Integer.toString(endProdTLOU));
+                    } else {
+                        throw new IOException();
+                    }
                 } else if (category.equals("plottwist")) {
                     this.plotMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
-                    this.plotProdTLOU = ((Long) producer.get("amountProducers")).intValue();
-                    TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
+                    if(AvailableProds < 10) {
+                        this.plotProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                        TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
+                    } else {
+                        throw new IOException();
+                    }
                 }
             }
             
@@ -146,7 +163,7 @@ public class TLOUInterface extends javax.swing.JFrame {
             TLOUInterface.numProdAssemblers.setText(Integer.toString(assemblersTLOU));
 
         } catch (IOException | ParseException e) {
-            System.out.println("Estoy poteando en el JSON");
+            System.out.println("Mano algo está mal con el JSON");
         }
         
         //Creando ProdIntroTLOU
@@ -751,10 +768,10 @@ public class TLOUInterface extends javax.swing.JFrame {
         if(this.arrayIntroTLOU != null){
             if(AvailableProds > 0){
                 
-                arrayIntroTLOU[introProdTLOU] = new ProdIntroTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                arrayIntroTLOU[introProdTLOU] = new ProdIntroTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 introProdTLOU++;
                 TLOUInterface.numProdIntro.setText(Integer.toString(introProdTLOU));
-                if (!this.stop) {
+                if(start){
                     this.arrayIntroTLOU[introProdTLOU - 1].start();
                 }
                 AvailableProds--;
@@ -767,10 +784,10 @@ public class TLOUInterface extends javax.swing.JFrame {
         if(this.arrayCreditTLOU != null){
             if(AvailableProds > 0){
                 
-                arrayCreditTLOU[creditProdTLOU] = new ProdCreditTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                arrayCreditTLOU[creditProdTLOU] = new ProdCreditTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 creditProdTLOU++;
                 TLOUInterface.numProdCredit.setText(Integer.toString(creditProdTLOU));
-                if (!this.stop) {
+                if(start){
                     this.arrayCreditTLOU[creditProdTLOU - 1].start();
                 }
                 AvailableProds--;
@@ -783,10 +800,10 @@ public class TLOUInterface extends javax.swing.JFrame {
         if(this.arrayBegTLOU != null){
             if(AvailableProds > 0){
                 
-                arrayBegTLOU[begProdTLOU] = new ProdBegTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                arrayBegTLOU[begProdTLOU] = new ProdBegTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 begProdTLOU++;
                 TLOUInterface.numProdBeg.setText(Integer.toString(begProdTLOU));
-                if (!this.stop) {
+                if(start){
                     this.arrayBegTLOU[begProdTLOU - 1].start();
                 }
                 AvailableProds--;
@@ -799,10 +816,10 @@ public class TLOUInterface extends javax.swing.JFrame {
         if(this.arrayEndTLOU != null){
             if(AvailableProds > 0){
                 
-                arrayEndTLOU[endProdTLOU] = new ProdEndTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                arrayEndTLOU[endProdTLOU] = new ProdEndTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 endProdTLOU++;
                 TLOUInterface.numProdEnd.setText(Integer.toString(endProdTLOU));
-                if (!this.stop) {
+                if(start){
                     this.arrayEndTLOU[endProdTLOU - 1].start();
                 }
                 AvailableProds--;
@@ -815,10 +832,10 @@ public class TLOUInterface extends javax.swing.JFrame {
         if(this.arrayPlotTLOU != null){
             if(AvailableProds > 0){
                 
-                arrayPlotTLOU[plotProdTLOU] = new ProdPlotTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
-                endProdTLOU++;
+                arrayPlotTLOU[plotProdTLOU] = new ProdPlotTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                plotProdTLOU++;
                 TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
-                if (!this.stop) {
+                if(start){    
                     this.arrayPlotTLOU[plotProdTLOU - 1].start();
                 }
                 AvailableProds--;
@@ -830,67 +847,89 @@ public class TLOUInterface extends javax.swing.JFrame {
     private void assemblerPlusTLOUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assemblerPlusTLOUActionPerformed
         if(this.arrayAssemblerTLOU != null){
                             
-            arrayAssemblerTLOU[assemblersTLOU] = new AssemblerTLOU(stop, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+            arrayAssemblerTLOU[assemblersTLOU] = new AssemblerTLOU(start, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
             assemblersTLOU++;
             TLOUInterface.numProdAssemblers.setText(Integer.toString(assemblersTLOU));
-            if (!this.stop) {
+            if(start) {
                 this.arrayAssemblerTLOU[assemblersTLOU - 1].start();
             }
         }
     }//GEN-LAST:event_assemblerPlusTLOUActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        // TODO add your handling code here:
+        this.start = false;
+            
+            for (int i = 0; i < introProdTLOU; i++) {
+                this.arrayIntroTLOU[i].setStart(start);
+            }
+            for (int i = 0; i < creditProdTLOU; i++) {
+                this.arrayCreditTLOU[i].setStart(start);
+            }
+            for (int i = 0; i < begProdTLOU; i++) {
+                this.arrayBegTLOU[i].setStart(start);
+            }
+            for (int i = 0; i < endProdTLOU; i++) {
+                this.arrayEndTLOU[i].setStart(start);
+            }
+            for (int i = 0; i < plotProdTLOU; i++) {
+                this.arrayPlotTLOU[i].setStart(start);
+            }
+            for (int i = 0; i < assemblersTLOU; i++) {
+                this.arrayAssemblerTLOU[i].setStart(start);
+            }
+            this.dirTLOU.setStart(start);
+            this.pmTLOU.setStart(start);
+            
     }//GEN-LAST:event_stopButtonActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        if (!this.stop) {
+        if (this.start) {
             
             // Llenar arrays de productores
             // Creando Intros
             for (int i = 0; i < introProdTLOU; i++) {
-                this.arrayIntroTLOU[i] = new ProdIntroTLOU(stop, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
+                this.arrayIntroTLOU[i] = new ProdIntroTLOU(start, dayDuration, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU);
                 this.arrayIntroTLOU[i].start();
             }
             
             // Creando Credits
             for (int i = 0; i < creditProdTLOU; i++) {
-                this.arrayCreditTLOU[i] = new ProdCreditTLOU(stop, dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
+                this.arrayCreditTLOU[i] = new ProdCreditTLOU(start, dayDuration, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU);
                 this.arrayCreditTLOU[i].start();
             }
             
             // Creando Beginnings
             for (int i = 0; i < begProdTLOU; i++) {
-                this.arrayBegTLOU[i] = new ProdBegTLOU(stop, dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
+                this.arrayBegTLOU[i] = new ProdBegTLOU(start, dayDuration, mutexBegTLOU, semBegTLOU, semAssemBegTLOU);
                 this.arrayBegTLOU[i].start();
             }
 
             // Creando Endings
             for (int i = 0; i < endProdTLOU; i++) {
-                this.arrayEndTLOU[i] = new ProdEndTLOU(stop, dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
+                this.arrayEndTLOU[i] = new ProdEndTLOU(start, dayDuration, mutexEndTLOU, semEndTLOU, semAssemEndTLOU);
                 this.arrayEndTLOU[i].start();
             }
 
             // Creando Plot twists
             for (int i = 0; i < plotProdTLOU; i++) {
-                this.arrayPlotTLOU[i] = new ProdPlotTLOU(stop, dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+                this.arrayPlotTLOU[i] = new ProdPlotTLOU(start, dayDuration, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
                 this.arrayPlotTLOU[i].start();
             }
 
             // Creando Ensamblador
             for (int i = 0; i < assemblersTLOU; i++) {
-                this.arrayAssemblerTLOU[i] = new AssemblerTLOU(stop, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
+                this.arrayAssemblerTLOU[i] = new AssemblerTLOU(start, dayDuration, mutexAssembler, mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU, mutexBegTLOU, semBegTLOU, semAssemBegTLOU, mutexEndTLOU, semEndTLOU, semAssemEndTLOU, mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU, mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU);
                 this.arrayAssemblerTLOU[i].start();
             }
 
             // Creando Project Manager TLOU
             this.stateMutexTLOU = new Semaphore(1);
             this.countMutexTLOU = new Semaphore(1);
-            this.pmTLOU = new ProjectManagerTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU);
+            this.pmTLOU = new ProjectManagerTLOU(start, dayDuration, countMutexTLOU, stateMutexTLOU);
             pmTLOU.start();
 
             // Creando Director TLOU
-            this.dirTLOU = new DirectorTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU, pmTLOU);
+            this.dirTLOU = new DirectorTLOU(start, dayDuration, countMutexTLOU, stateMutexTLOU, pmTLOU);
             dirTLOU.start();
         }
     }//GEN-LAST:event_startButtonActionPerformed
