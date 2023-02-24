@@ -83,10 +83,10 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel8.setText("Y EL MAS RENTABLE ES...");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 180, 60));
-        getContentPane().add(balanceGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 140, 30));
-        getContentPane().add(chaptersMadeGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 140, 30));
+        getContentPane().add(balanceGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 180, 30));
+        getContentPane().add(chaptersMadeGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 190, 30));
         getContentPane().add(mostProfitable, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 440, 270, 30));
-        getContentPane().add(earningsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 140, 30));
+        getContentPane().add(earningsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 180, 30));
         getContentPane().add(balanceTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 140, 30));
         getContentPane().add(chaptersMadeTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 180, 140, 30));
         getContentPane().add(costsTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 230, 140, 30));
@@ -98,7 +98,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel9.setText("Balance");
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, 210, 60));
-        getContentPane().add(costsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 140, 30));
+        getContentPane().add(costsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 180, 30));
 
         compare.setText("Comparar");
         compare.addActionListener(new java.awt.event.ActionListener() {
@@ -112,7 +112,7 @@ public class Dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void compareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compareActionPerformed
-        if(Double.parseDouble(balanceGOT.toString()) > Double.parseDouble(balanceTLOU.toString())){
+        if(Double.parseDouble(balanceGOT.getText()) > Double.parseDouble(balanceTLOU.getText())){
             mostProfitable.setText("Game of thrones!!!!");
         } else {
             mostProfitable.setText("The Last of Us!!!!");
