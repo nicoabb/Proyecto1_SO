@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
  */
 public class AssemblerTLOU extends Thread{
 
-    private boolean stop;
+    private boolean start;
     private int dayDuration;
     private double dailyProduce = 0.5; //Produce un capítulo cada 2 días
     private int numIntro = 1;
@@ -45,8 +45,8 @@ public class AssemblerTLOU extends Thread{
     private Semaphore semPlot; //Productor
     private Semaphore semAssemPlot; //Consumidor
 
-    public AssemblerTLOU(boolean stop, int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore semEnsIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore semEnsBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore semEnsEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore semEnsCredit, Semaphore mutexPlot, Semaphore semPlot, Semaphore semEnsPlot) {
-        this.stop = stop;
+    public AssemblerTLOU(boolean start, int dayDuration, Semaphore mutexAssembler, Semaphore mutexIntro, Semaphore semIntro, Semaphore semEnsIntro, Semaphore mutexBeg, Semaphore semBeg, Semaphore semEnsBeg, Semaphore mutexEnd, Semaphore semEnd, Semaphore semEnsEnd, Semaphore mutexCredit, Semaphore semCredit, Semaphore semEnsCredit, Semaphore mutexPlot, Semaphore semPlot, Semaphore semEnsPlot) {
+        this.start = start;
         this.dayDuration = dayDuration;
         this.mutexAssembler = mutexAssembler;
         this.mutexIntro = mutexIntro;
@@ -68,7 +68,7 @@ public class AssemblerTLOU extends Thread{
     
     @Override
     public void run(){
-        while(!stop){
+        while(start){
             try{
                 //Entrar a los Drives de cada parte
                 semAssemIntro.acquire(numIntro);
@@ -122,6 +122,7 @@ public class AssemblerTLOU extends Thread{
                 mutexAssembler.acquire();
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 TLOUInterface.chaptersTLOU += 1;
+                TLOUInterface.totalChapters += 1;
                 TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
                 mutexAssembler.release();
 
@@ -130,4 +131,10 @@ public class AssemblerTLOU extends Thread{
             }
         }
     }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+    
+    
 }

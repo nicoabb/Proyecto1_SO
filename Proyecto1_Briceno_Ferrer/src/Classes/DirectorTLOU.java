@@ -15,16 +15,16 @@ import java.util.concurrent.Semaphore;
  */
 public class DirectorTLOU extends Thread{
     private int dayDuration;
-    private boolean stop;
+    private boolean start;
     private Semaphore countMutex; 
     private Semaphore stateMutex; //Mutex del estado, para que no se cambie cuando el director lea
     private ProjectManagerTLOU proManager;
     private int eqHour; //Variable para trabajar las horas de acuerdo a la duración del día establecida
     private int eqMinute; //Variable para trabajar los minutos de acuerdo a la duración del día establecida
     
-    public DirectorTLOU(boolean stop, int dayDuration, Semaphore countMutex, Semaphore stateMutex, ProjectManagerTLOU proManager) {
+    public DirectorTLOU(boolean start, int dayDuration, Semaphore countMutex, Semaphore stateMutex, ProjectManagerTLOU proManager) {
         this.dayDuration = (dayDuration * 1000);
-        this.stop = stop;
+        this.start = start;
         this.countMutex = countMutex;
         this.stateMutex = stateMutex;
         this.proManager = proManager;
@@ -34,7 +34,7 @@ public class DirectorTLOU extends Thread{
     
     @Override
     public void run() {
-        while(!stop){
+        while(start){
             try {
                 int randPeriod = getRandom(12,18);
                 int checkPeriod =  randPeriod * eqHour; //Período en el que irá a revisar al PM
@@ -46,6 +46,9 @@ public class DirectorTLOU extends Thread{
                     TLOUInterface.dirState.setText("Entregando capítulos a HBO MAX");
                     TLOUInterface.chaptersTLOU = 0;
                     TLOUInterface.numChapters.setText(Integer.toString(TLOUInterface.chaptersTLOU));
+                    TLOUInterface.totalChaptersLabel.setText(Integer.toString(TLOUInterface.totalChapters));
+                    TLOUInterface.incomeChapters = TLOUInterface.totalChapters * ((1100000 / 150000) * 100000);
+                    TLOUInterface.incomeChaptersLabel.setText("$ " + Integer.toString(TLOUInterface.incomeChapters));
                     TLOUInterface.counter = TLOUInterface.backupCounter;
                     TLOUInterface.daysCounter.setText(Integer.toString(TLOUInterface.counter));
                 }
@@ -60,6 +63,8 @@ public class DirectorTLOU extends Thread{
                     stateMutex.acquire();
                     if(proManager.state.contains("Viendo Rick y Morty")){
                         TLOUInterface.dirState.setText("¡Atrapado!");
+                        TLOUInterface.numFaults++;
+                        TLOUInterface.penalizationLabel.setText("$ " + Integer.toString(TLOUInterface.numFaults));
                     }
                     stateMutex.release();
                     
@@ -79,4 +84,9 @@ public class DirectorTLOU extends Thread{
         int c = (int)(Math.random()*(b-a+1)+a);
         return c;
     }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+    
 }
