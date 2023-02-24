@@ -1,0 +1,36 @@
+{
+  "days": {
+    "dayDuration": 10000,
+    "counter": 30
+  },
+  "producers": [
+    {
+      "category": "intro",
+      "driveGb": 30,
+      "amountProducers": 3
+    },
+    {
+      "category": "credits",
+      "driveGb": 25,
+      "amountProducers": 3
+    },
+    {
+      "category": "beginning",
+      "driveGb": 50,
+      "amountProducers": 6
+    },
+    {
+      "category": "ending",
+      "driveGb": 55,
+      "amountProducers": 5
+    },
+    {
+      "category": "plottwist",
+      "driveGb": 30,
+      "amountProducers": 2
+    }
+  ],
+  "assemblers": {
+        "amountAssemblers": 1
+  }
+}

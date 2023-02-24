@@ -14,6 +14,15 @@ import Classes.ProdIntroTLOU;
 import Classes.ProdPlotTLOU;
 import Classes.ProjectManagerTLOU;
 import java.util.concurrent.Semaphore;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
 
 /**
  *
@@ -36,27 +45,27 @@ public class TLOUInterface extends javax.swing.JFrame {
     
     //Datos del Productor de Intro TLOU
     private ProdIntroTLOU prodIntroTLOU;
-    private int introMaxDriveTLOU;
+    private int introMaxDriveTLOU, introProdTLOU;
     private Semaphore mutexIntroTLOU, semIntroTLOU, semAssemIntroTLOU;
     
     //Datos del Productor de Creditos TLOU
     private ProdCreditTLOU prodCreditTLOU;
-    private int creditMaxDriveTLOU;
+    private int creditMaxDriveTLOU, creditProdTLOU;
     private Semaphore mutexCreditTLOU, semCreditTLOU, semAssemCreditTLOU;
     
     //Datos del Productor de Inicio (Beggining) TLOU
     private ProdBegTLOU prodBegTLOU;
-    private int begMaxDriveTLOU;
+    private int begMaxDriveTLOU, begProdTLOU;
     private Semaphore mutexBegTLOU, semBegTLOU, semAssemBegTLOU;
     
     //Datos del Productor de Cierre (End) TLOU
     private ProdEndTLOU prodEndTLOU;
-    private int endMaxDriveTLOU;
+    private int endMaxDriveTLOU, endProdTLOU;
     private Semaphore mutexEndTLOU, semEndTLOU, semAssemEndTLOU;
     
     //Datos del Productor de Plot (Plot Twist) TLOU
     private ProdPlotTLOU prodPlotTLOU;
-    private int plotMaxDriveTLOU;
+    private int plotMaxDriveTLOU, plotProdTLOU;
     private Semaphore mutexPlotTLOU, semPlotTLOU, semAssemPlotTLOU;
     
     //Datos del Ensamblador TLOU
@@ -71,24 +80,65 @@ public class TLOUInterface extends javax.swing.JFrame {
     private DirectorTLOU dirTLOU;
     
     /**
-     * Creates new form Dashboard
+     * Creates new form TLOUInterface
      */
     public TLOUInterface() {
         initComponents();
-        inicializarTLOU();
+        readJson();
     }
     
-    public void inicializarTLOU() {
+    public void readJson() {
         //Con el JSON tienen que cambiarse los valores de abajo
+        
+        JSONParser parser = new JSONParser();
+
+        try ( Reader reader = new FileReader("src/data.json")) {
+
+            JSONObject jsonObject = (JSONObject) parser.parse(reader);
+
+            JSONObject dayObj = (JSONObject) jsonObject.get("days");
+            dayDuration = ((Long) dayObj.get("dayDuration")).intValue();
+            counter = ((Long) dayObj.get("counter")).intValue();
+            backupCounter = counter;
+
+            JSONArray producersArray = (JSONArray) jsonObject.get("producers");
+
+            for (Object obj : producersArray) {
+                JSONObject producer = (JSONObject) obj;
+
+                String category = (String) producer.get("category");
+                if (category.equals("intro")) {
+                    this.introMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
+                    this.introProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                    TLOUInterface.numProdIntro.setText(Integer.toString(introProdTLOU));
+
+                } else if (category.equals("credits")) {
+                    this.creditMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
+                    this.creditProdTLOU = ((Long) producer.get("amountProducers")).intValue();;
+                    TLOUInterface.numProdCredit.setText(Integer.toString(creditProdTLOU));
+
+                } else if (category.equals("beginning")) {
+                    this.begMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
+                    this.begProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                    TLOUInterface.numProdBeg.setText(Integer.toString(begProdTLOU));
+
+                } else if (category.equals("ending")) {
+                    this.endMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
+                    this.endProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                    TLOUInterface.numProdEnd.setText(Integer.toString(endProdTLOU));
+
+                } else if (category.equals("plottwist")) {
+                    this.plotMaxDriveTLOU = ((Long) producer.get("driveGb")).intValue();
+                    this.plotProdTLOU = ((Long) producer.get("amountProducers")).intValue();
+                    TLOUInterface.numProdPlot.setText(Integer.toString(plotProdTLOU));
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        
         this.stop = false;
-        this.dayDuration = 2;
-        this.backupCounter = 30;
-        this.counter = 30;
-        this.introMaxDriveTLOU = 30;
-        this.creditMaxDriveTLOU = 25;
-        this.begMaxDriveTLOU = 50;
-        this.endMaxDriveTLOU = 55;
-        this.plotMaxDriveTLOU = 40;
         
         //Creando ProdIntroTLOU
         this.mutexIntroTLOU = new Semaphore(1);
@@ -140,8 +190,8 @@ public class TLOUInterface extends javax.swing.JFrame {
         this.dirTLOU = new DirectorTLOU(stop, dayDuration, countMutexTLOU, stateMutexTLOU, pmTLOU);
         dirTLOU.start();
         
-    }
-
+        }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -153,12 +203,13 @@ public class TLOUInterface extends javax.swing.JFrame {
 
         jLabel2 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        numIntroTLOU1 = new javax.swing.JLabel();
         introMinusTLOU2 = new javax.swing.JButton();
-        numProdIntro2 = new javax.swing.JLabel();
+        numProdBeg = new javax.swing.JLabel();
         introPlusTLOU2 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         introMinusTLOU1 = new javax.swing.JButton();
-        numProdIntro1 = new javax.swing.JLabel();
+        numProdCredit = new javax.swing.JLabel();
         introPlusTLOU1 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         numProdIntro = new javax.swing.JLabel();
@@ -188,23 +239,36 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         introMinusTLOU = new javax.swing.JButton();
         introPlusTLOU = new javax.swing.JButton();
-        numProdIntro3 = new javax.swing.JLabel();
+        numProdEnd = new javax.swing.JLabel();
         introMinusTLOU3 = new javax.swing.JButton();
         introPlusTLOU3 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         introMinusTLOU4 = new javax.swing.JButton();
-        numProdIntro4 = new javax.swing.JLabel();
+        numProdPlot = new javax.swing.JLabel();
         introPlusTLOU4 = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         introMinusTLOU5 = new javax.swing.JButton();
-        numProdIntro5 = new javax.swing.JLabel();
+        numProdAssemblers = new javax.swing.JLabel();
         introPlusTLOU5 = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        numIntroTLOU2 = new javax.swing.JLabel();
+        numIntroTLOU3 = new javax.swing.JLabel();
+        numIntroTLOU4 = new javax.swing.JLabel();
+        numIntroTLOU5 = new javax.swing.JLabel();
+        numIntroTLOU6 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
-        setMinimumSize(new java.awt.Dimension(812, 475));
+        setMinimumSize(new java.awt.Dimension(812, 600));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -220,17 +284,23 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel15.setText("Prod. Inicio:");
         getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 250, 150, 26));
 
+        numIntroTLOU1.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU1.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU1.setText("$ 0");
+        getContentPane().add(numIntroTLOU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 340, 40, 26));
+
         introMinusTLOU2.setBackground(new java.awt.Color(204, 0, 0));
         introMinusTLOU2.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
         introMinusTLOU2.setForeground(new java.awt.Color(255, 255, 255));
         introMinusTLOU2.setText("-");
         getContentPane().add(introMinusTLOU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 250, -1, -1));
 
-        numProdIntro2.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        numProdIntro2.setForeground(new java.awt.Color(102, 102, 102));
-        numProdIntro2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        numProdIntro2.setText("0");
-        getContentPane().add(numProdIntro2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 250, 40, 30));
+        numProdBeg.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        numProdBeg.setForeground(new java.awt.Color(102, 102, 102));
+        numProdBeg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numProdBeg.setText("0");
+        getContentPane().add(numProdBeg, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 250, 50, 30));
 
         introPlusTLOU2.setBackground(new java.awt.Color(0, 102, 0));
         introPlusTLOU2.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -256,11 +326,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         introMinusTLOU1.setText("-");
         getContentPane().add(introMinusTLOU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, -1, -1));
 
-        numProdIntro1.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        numProdIntro1.setForeground(new java.awt.Color(102, 102, 102));
-        numProdIntro1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        numProdIntro1.setText("0");
-        getContentPane().add(numProdIntro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 220, 40, 30));
+        numProdCredit.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        numProdCredit.setForeground(new java.awt.Color(102, 102, 102));
+        numProdCredit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numProdCredit.setText("0");
+        getContentPane().add(numProdCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 50, 30));
 
         introPlusTLOU1.setBackground(new java.awt.Color(0, 102, 0));
         introPlusTLOU1.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -284,7 +354,7 @@ public class TLOUInterface extends javax.swing.JFrame {
         numProdIntro.setForeground(new java.awt.Color(102, 102, 102));
         numProdIntro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         numProdIntro.setText("0");
-        getContentPane().add(numProdIntro, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 190, 40, 30));
+        getContentPane().add(numProdIntro, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 190, 50, 30));
 
         numIntroTLOU.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         numIntroTLOU.setForeground(new java.awt.Color(102, 102, 102));
@@ -356,12 +426,12 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Estado del PM:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, -1, 26));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 500, -1, 26));
 
         pmState.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         pmState.setForeground(new java.awt.Color(153, 153, 153));
-        pmState.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(pmState, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 290, 240, 26));
+        pmState.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        getContentPane().add(pmState, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 500, 160, 26));
 
         daysCounter.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
         daysCounter.setForeground(new java.awt.Color(102, 102, 102));
@@ -379,12 +449,12 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel10.setForeground(new java.awt.Color(102, 102, 102));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Estado del Director:");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, -1, -1));
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, -1, -1));
 
         dirState.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
         dirState.setForeground(new java.awt.Color(153, 153, 153));
-        dirState.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(dirState, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 220, 234, 26));
+        dirState.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        getContentPane().add(dirState, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 460, 160, 30));
 
         TLOUlogo.setFont(new java.awt.Font("Haettenschweiler", 0, 72)); // NOI18N
         TLOUlogo.setForeground(new java.awt.Color(204, 204, 204));
@@ -419,7 +489,7 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(51, 51, 51));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("ESTADOS");
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 150, 160, 26));
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 420, 160, 26));
 
         introMinusTLOU.setBackground(new java.awt.Color(204, 0, 0));
         introMinusTLOU.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
@@ -439,11 +509,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         });
         getContentPane().add(introPlusTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 190, -1, -1));
 
-        numProdIntro3.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        numProdIntro3.setForeground(new java.awt.Color(102, 102, 102));
-        numProdIntro3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        numProdIntro3.setText("0");
-        getContentPane().add(numProdIntro3, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 40, 30));
+        numProdEnd.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        numProdEnd.setForeground(new java.awt.Color(102, 102, 102));
+        numProdEnd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numProdEnd.setText("0");
+        getContentPane().add(numProdEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 280, 50, 30));
 
         introMinusTLOU3.setBackground(new java.awt.Color(204, 0, 0));
         introMinusTLOU3.setFont(new java.awt.Font("Haettenschweiler", 1, 18)); // NOI18N
@@ -481,11 +551,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         introMinusTLOU4.setText("-");
         getContentPane().add(introMinusTLOU4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, -1, -1));
 
-        numProdIntro4.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        numProdIntro4.setForeground(new java.awt.Color(102, 102, 102));
-        numProdIntro4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        numProdIntro4.setText("0");
-        getContentPane().add(numProdIntro4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 310, 40, 30));
+        numProdPlot.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        numProdPlot.setForeground(new java.awt.Color(102, 102, 102));
+        numProdPlot.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numProdPlot.setText("0");
+        getContentPane().add(numProdPlot, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 50, 30));
 
         introPlusTLOU4.setBackground(new java.awt.Color(0, 102, 0));
         introPlusTLOU4.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -511,11 +581,11 @@ public class TLOUInterface extends javax.swing.JFrame {
         introMinusTLOU5.setText("-");
         getContentPane().add(introMinusTLOU5, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, -1, -1));
 
-        numProdIntro5.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
-        numProdIntro5.setForeground(new java.awt.Color(102, 102, 102));
-        numProdIntro5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        numProdIntro5.setText("0");
-        getContentPane().add(numProdIntro5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 340, 40, 30));
+        numProdAssemblers.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
+        numProdAssemblers.setForeground(new java.awt.Color(102, 102, 102));
+        numProdAssemblers.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numProdAssemblers.setText("0");
+        getContentPane().add(numProdAssemblers, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 340, 50, 30));
 
         introPlusTLOU5.setBackground(new java.awt.Color(0, 102, 0));
         introPlusTLOU5.setFont(new java.awt.Font("Haettenschweiler", 0, 18)); // NOI18N
@@ -532,8 +602,86 @@ public class TLOUInterface extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(51, 51, 51));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel19.setText("CANTIDADES");
-        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 150, 160, 26));
+        jLabel19.setText("DIRECTOR Y PM");
+        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 420, 180, 26));
+
+        jLabel20.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel20.setText("CANTIDADES");
+        getContentPane().add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 150, 160, 26));
+
+        jLabel21.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel21.setText("Prod. Intro:");
+        getContentPane().add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 190, 160, 26));
+
+        jLabel22.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel22.setText("Prod. Crédito:");
+        getContentPane().add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 150, 26));
+
+        jLabel23.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel23.setText("Prod. Inicio:");
+        getContentPane().add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 250, 150, 26));
+
+        jLabel24.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel24.setText("Prod. Cierre:");
+        getContentPane().add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 280, 150, 26));
+
+        jLabel25.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel25.setText("Prod. Plot Twist:");
+        getContentPane().add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 310, 150, 26));
+
+        jLabel26.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel26.setText("Ensambladores:");
+        getContentPane().add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, 150, 26));
+
+        numIntroTLOU2.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU2.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU2.setText("$ 0");
+        getContentPane().add(numIntroTLOU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, 40, 26));
+
+        numIntroTLOU3.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU3.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU3.setText("$ 0");
+        getContentPane().add(numIntroTLOU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 220, 40, 26));
+
+        numIntroTLOU4.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU4.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU4.setText("$ 0");
+        getContentPane().add(numIntroTLOU4, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 250, 40, 26));
+
+        numIntroTLOU5.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU5.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU5.setText("$ 0");
+        getContentPane().add(numIntroTLOU5, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 280, 40, 26));
+
+        numIntroTLOU6.setFont(new java.awt.Font("Haettenschweiler", 0, 24)); // NOI18N
+        numIntroTLOU6.setForeground(new java.awt.Color(102, 102, 102));
+        numIntroTLOU6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        numIntroTLOU6.setText("$ 0");
+        getContentPane().add(numIntroTLOU6, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 310, 40, 26));
+
+        jLabel27.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        jLabel27.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel27.setText("COSTOS");
+        getContentPane().add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 150, 160, 26));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -629,6 +777,14 @@ public class TLOUInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -641,13 +797,19 @@ public class TLOUInterface extends javax.swing.JFrame {
     public static javax.swing.JLabel numCreditTLOU;
     public static javax.swing.JLabel numEndTLOU;
     public static javax.swing.JLabel numIntroTLOU;
+    public static javax.swing.JLabel numIntroTLOU1;
+    public static javax.swing.JLabel numIntroTLOU2;
+    public static javax.swing.JLabel numIntroTLOU3;
+    public static javax.swing.JLabel numIntroTLOU4;
+    public static javax.swing.JLabel numIntroTLOU5;
+    public static javax.swing.JLabel numIntroTLOU6;
     public static javax.swing.JLabel numPlotTLOU;
+    public static javax.swing.JLabel numProdAssemblers;
+    public static javax.swing.JLabel numProdBeg;
+    public static javax.swing.JLabel numProdCredit;
+    public static javax.swing.JLabel numProdEnd;
     public static javax.swing.JLabel numProdIntro;
-    public static javax.swing.JLabel numProdIntro1;
-    public static javax.swing.JLabel numProdIntro2;
-    public static javax.swing.JLabel numProdIntro3;
-    public static javax.swing.JLabel numProdIntro4;
-    public static javax.swing.JLabel numProdIntro5;
+    public static javax.swing.JLabel numProdPlot;
     public static javax.swing.JLabel pmState;
     // End of variables declaration//GEN-END:variables
 }
