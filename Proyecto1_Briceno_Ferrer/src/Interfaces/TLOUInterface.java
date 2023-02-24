@@ -5,15 +5,15 @@
  */
 package Interfaces;
 
-import Classes.AdministratorTLOU;
-import Classes.AssemblerTLOU;
-import Classes.DirectorTLOU;
-import Classes.ProdEndTLOU;
-import Classes.ProdBegTLOU;
-import Classes.ProdCreditTLOU;
-import Classes.ProdIntroTLOU;
-import Classes.ProdPlotTLOU;
-import Classes.ProjectManagerTLOU;
+import Classes.TLOU.AdministratorTLOU;
+import Classes.TLOU.AssemblerTLOU;
+import Classes.TLOU.DirectorTLOU;
+import Classes.TLOU.ProdEndTLOU;
+import Classes.TLOU.ProdBegTLOU;
+import Classes.TLOU.ProdCreditTLOU;
+import Classes.TLOU.ProdIntroTLOU;
+import Classes.TLOU.ProdPlotTLOU;
+import Classes.TLOU.ProjectManagerTLOU;
 import java.util.concurrent.Semaphore;
 import java.io.FileReader;
 import java.io.IOException;

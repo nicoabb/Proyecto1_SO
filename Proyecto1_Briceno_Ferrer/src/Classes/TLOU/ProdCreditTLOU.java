@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Classes.TLOU;
 
 import Interfaces.TLOUInterface;
 import java.util.concurrent.Semaphore;
@@ -12,20 +12,19 @@ import java.util.concurrent.Semaphore;
  *
  * @author Nicolás Briceño
  */
-public class ProdEndTLOU extends Thread{
+public class ProdCreditTLOU extends Thread{
     
     private boolean start;
     private int dayDuration;
-    private double dailyProduce = 0.25; //Produce 1 cierre cada 4 días
+    private double dailyProduce = 4; //Produce 4 créditos al día
     private Semaphore mutex, semPart, semAssembler;
 
-    public ProdEndTLOU(boolean start, int dayDuration, Semaphore mutexEnd, Semaphore semEnd, Semaphore semAssemEnd) {
+    public ProdCreditTLOU(boolean start, int dayDuration, Semaphore mutexCredit, Semaphore semCredit, Semaphore semAssemCredit) {
         this.start = start;
         this.dayDuration = dayDuration;
-        this.mutex = mutexEnd;
-        this.semPart = semEnd;
-        this.semAssembler = semAssemEnd;
-        
+        this.mutex = mutexCredit;
+        this.semPart = semCredit;
+        this.semAssembler = semAssemCredit;
     }
     
     @Override
@@ -37,8 +36,8 @@ public class ProdEndTLOU extends Thread{
                 Thread.sleep(Math.round((dayDuration * 1000) / dailyProduce));
                 mutex.acquire();
                 
-                TLOUInterface.endDriveTLOU++;
-                TLOUInterface.numEndTLOU.setText(Integer.toString(TLOUInterface.endDriveTLOU));
+                TLOUInterface.creditDriveTLOU++;
+                TLOUInterface.numCreditTLOU.setText(Integer.toString(TLOUInterface.creditDriveTLOU));
 
                 mutex.release();
                 semAssembler.release();
@@ -52,7 +51,5 @@ public class ProdEndTLOU extends Thread{
     public void setStart(boolean start) {
         this.start = start;
     }
-    
-    
     
 }
