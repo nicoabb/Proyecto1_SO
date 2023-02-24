@@ -5,6 +5,7 @@
  */
 package Classes.GOT;
 
+import Interfaces.Dashboard;
 import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
@@ -44,6 +45,7 @@ public class directorGOT extends Thread {
                     GOTInterface.prodSalariesLabel.setText(Double.toString(GOTInterface.salariesProds));
                     GOTInterface.assemblersSalariesLabel.setText(Double.toString(GOTInterface.assemblersSalaries));
                     GOTInterface.pmSalaryLabel.setText(Double.toString(GOTInterface.pmSalary));
+                    GOTInterface.directorSalaryLabel.setText(Double.toString(GOTInterface.directorSalary));
                     GOTInterface.RaMLabel.setText(Integer.toString(GOTInterface.amountRaM));
                     GOTInterface.salariesLabel.setText("-"+Double.toString(GOTInterface.salariesTotal));
 
@@ -55,6 +57,14 @@ public class directorGOT extends Thread {
                     } else {
                         GOTInterface.balanceLabel.setText("-" + Double.toString(GOTInterface.balance));
                     };
+                    
+                    
+                    //Reflejar las variables en el dashboard
+                    Dashboard.chaptersMadeGOT.setText(Integer.toString(GOTInterface.chaptersProducedGOT));
+                    Dashboard.costsGOT.setText(Double.toString(GOTInterface.salariesTotal));
+                    Dashboard.earningsGOT.setText(Double.toString(GOTInterface.earnings));
+                    Dashboard.balanceGOT.setText(Double.toString(GOTInterface.balance));
+                    
 
 //                    counter.release(30);
                     for (int i = 0; i < 10; i++) {

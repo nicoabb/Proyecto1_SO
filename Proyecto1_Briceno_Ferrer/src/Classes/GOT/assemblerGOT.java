@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 public class assemblerGOT extends Thread {
 
     private double dailyProduction = 0.5; // Un cap cada 2 dias
-    private int chapterCounter = 1;
     private int cantIntrosGOT = 1; // 1 intro por capitulo
     private int cantBegsGOT = 1; // 1 inicio por capitulo
     private int cantEndsGOT = 2; // 2 cierres por capitulo

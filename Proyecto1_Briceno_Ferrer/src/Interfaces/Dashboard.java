@@ -28,30 +28,96 @@ public class Dashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        balanceGOT = new javax.swing.JLabel();
+        chaptersMadeGOT = new javax.swing.JLabel();
+        mostProfitable = new javax.swing.JLabel();
+        earningsGOT = new javax.swing.JLabel();
+        balanceTLOU = new javax.swing.JLabel();
+        chaptersMadeTLOU = new javax.swing.JLabel();
+        costsTLOU = new javax.swing.JLabel();
+        earningsTLOU = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        costsGOT = new javax.swing.JLabel();
+        compare = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Dashboard");
+        jLabel1.setToolTipText("");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 100, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(173, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(170, 170, 170))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jLabel1)
-                .addContainerGap(247, Short.MAX_VALUE))
-        );
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel2.setText("The Last of Us");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 80, 100, 60));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel3.setText("Corte de comparacion: 30 dias");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 210, 30));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel4.setText("Game of thrones");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 130, 60));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel5.setText("Cantidad de capitulos hechos");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 160, 210, 60));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel6.setText("Costos operativos (salarios)");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 210, 60));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel7.setText("Ganancias");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 260, 210, 60));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel8.setText("Y EL MAS RENTABLE ES...");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 180, 60));
+        getContentPane().add(balanceGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 140, 30));
+        getContentPane().add(chaptersMadeGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 140, 30));
+        getContentPane().add(mostProfitable, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 440, 270, 30));
+        getContentPane().add(earningsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 140, 30));
+        getContentPane().add(balanceTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 140, 30));
+        getContentPane().add(chaptersMadeTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 180, 140, 30));
+        getContentPane().add(costsTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 230, 140, 30));
+        getContentPane().add(earningsTLOU, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 280, 140, 30));
+
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/graphicdesign.png"))); // NOI18N
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 380, 107, 103));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel9.setText("Balance");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, 210, 60));
+        getContentPane().add(costsGOT, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 140, 30));
+
+        compare.setText("Comparar");
+        compare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                compareActionPerformed(evt);
+            }
+        });
+        getContentPane().add(compare, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 440, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void compareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compareActionPerformed
+        if(Double.parseDouble(balanceGOT.toString()) > Double.parseDouble(balanceTLOU.toString())){
+            mostProfitable.setText("Game of thrones!!!!");
+        } else {
+            mostProfitable.setText("The Last of Us!!!!");
+        }
+    }//GEN-LAST:event_compareActionPerformed
 
     /**
      * @param args the command line arguments
@@ -89,6 +155,25 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JLabel balanceGOT;
+    public static javax.swing.JLabel balanceTLOU;
+    public static javax.swing.JLabel chaptersMadeGOT;
+    public static javax.swing.JLabel chaptersMadeTLOU;
+    private javax.swing.JButton compare;
+    public static javax.swing.JLabel costsGOT;
+    public static javax.swing.JLabel costsTLOU;
+    public static javax.swing.JLabel earningsGOT;
+    public static javax.swing.JLabel earningsTLOU;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    public static javax.swing.JLabel mostProfitable;
     // End of variables declaration//GEN-END:variables
 }

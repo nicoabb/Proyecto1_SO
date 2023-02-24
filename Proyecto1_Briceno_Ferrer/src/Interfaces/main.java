@@ -13,7 +13,7 @@ public class main extends javax.swing.JFrame {
     
     TLOUInterface tlou = new TLOUInterface();
     Dashboard dash = new Dashboard();
-    //GOTInterface coming soon
+    GOTInterface got = new GOTInterface();
     /**
      * Creates new form Dashboard
      */
@@ -34,12 +34,14 @@ public class main extends javax.swing.JFrame {
         GOTbutton = new javax.swing.JToggleButton();
         TLOUbutton = new javax.swing.JToggleButton();
         DashboardButton = new javax.swing.JToggleButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Proyecto 1 Sistemas Operativos");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, -1, -1));
 
         GOTbutton.setText("Empresa GOT (Emilio)");
         GOTbutton.addActionListener(new java.awt.event.ActionListener() {
@@ -47,7 +49,7 @@ public class main extends javax.swing.JFrame {
                 GOTbuttonActionPerformed(evt);
             }
         });
-        getContentPane().add(GOTbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 180, -1));
+        getContentPane().add(GOTbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 170, 180, -1));
 
         TLOUbutton.setText("Empresa TLOU (Nico)");
         TLOUbutton.addActionListener(new java.awt.event.ActionListener() {
@@ -55,7 +57,7 @@ public class main extends javax.swing.JFrame {
                 TLOUbuttonActionPerformed(evt);
             }
         });
-        getContentPane().add(TLOUbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 180, -1));
+        getContentPane().add(TLOUbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 210, 180, -1));
 
         DashboardButton.setText("Dashboard");
         DashboardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -63,7 +65,13 @@ public class main extends javax.swing.JFrame {
                 DashboardButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(DashboardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 180, -1));
+        getContentPane().add(DashboardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 250, 180, -1));
+
+        jLabel2.setText("Emilio Ferrer y Nicolas Briceño. Febrero 2023");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, 240, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/micaracuando.png"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 196, 215));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -83,9 +91,9 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_DashboardButtonActionPerformed
 
     private void GOTbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GOTbuttonActionPerformed
-        //tlou.setVisible(false);
-        //dash.setVisible(false);
-        //got.setVisible(true);
+        tlou.setVisible(false);
+        dash.setVisible(false);
+        got.setVisible(true);
         
     }//GEN-LAST:event_GOTbuttonActionPerformed
 
@@ -130,5 +138,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JToggleButton GOTbutton;
     private javax.swing.JToggleButton TLOUbutton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }
