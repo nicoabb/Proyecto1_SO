@@ -93,7 +93,6 @@ public class GOTInterface extends javax.swing.JFrame {
     }
 
     public void readJson() {
-        //Esta creacion del array de assemblers no es parte del Json pero me conviene que esté aquí
 
         JSONParser parser = new JSONParser();
 

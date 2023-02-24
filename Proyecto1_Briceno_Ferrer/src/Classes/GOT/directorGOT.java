@@ -66,7 +66,7 @@ public class directorGOT extends Thread {
                     Dashboard.balanceGOT.setText(Double.toString(GOTInterface.balance));
                     
 
-//                    counter.release(30);
+
                     for (int i = 0; i < 10; i++) {
                         if (GOTInterface.arrayAssemblersGOT[i] != null) {
                             GOTInterface.arrayAssemblersGOT[i].setStop(true);
@@ -101,7 +101,7 @@ public class directorGOT extends Thread {
                     double timeBetweenCheck = Math.random() * ((1.5 * GOTInterface.hourDuration) - (0.5 * GOTInterface.hourDuration)) + 0.5 * GOTInterface.hourDuration;
                     Thread.sleep(Math.round(timeBetweenCheck));
                     // Aqui va y ve qué está haciendo el PM
-//                    System.out.println("Revisando...");
+
                     if (pm.watchingRaM) {
                         GOTInterface.amountRaM++;
 //                        System.out.println("Está viendo Rikimorti el PM!!!");
@@ -109,10 +109,10 @@ public class directorGOT extends Thread {
                     elapsedTime = System.currentTimeMillis() - startTime;
 
                 }
-//                System.out.println("descansando");
+
 
                 Thread.sleep((GOTInterface.dayDuration - Math.round(guardLength)));
-//                System.out.println("ahora a repetir el ciclo");
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(directorGOT.class.getName()).log(Level.SEVERE, null, ex);
             }
