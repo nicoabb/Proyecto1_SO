@@ -1,6 +1,6 @@
 {
   "days": {
-    "dayLength": 1000,
+    "dayLength": 10000,
     "cutDuration": 30
   },
   "producers": [

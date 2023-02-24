@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class prodEndGOT extends Thread {
 
     private Semaphore mutex;
-    private boolean stop = false;
+    private boolean stop;
     private Semaphore semEnd;
     private double endsPerDay = 0.33333;
     private Semaphore semEns;
@@ -33,11 +33,11 @@ public class prodEndGOT extends Thread {
                 try {
                     semEnd.acquire();
                     
-                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / endsPerDay)); // Aqui espera 3 dias (que le toma hacer un ending) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
-                    Interfaces.Dashboard.endsProducedGOT++;
-                    Interfaces.Dashboard.qtyEndsGOT.setText(Integer.toString(Interfaces.Dashboard.endsProducedGOT));
+                    Interfaces.GOTInterface.endsProducedGOT++;
+                    Interfaces.GOTInterface.qtyEndsGOT.setText(Integer.toString(Interfaces.GOTInterface.endsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -46,6 +46,10 @@ public class prodEndGOT extends Thread {
                 }
             }
 
+    }
+    
+    public void setStop(boolean stop) {
+        this.stop = stop;
     }
     
 }

@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.GOTInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,9 +26,9 @@ public class AlternatorGOT extends Thread {
     @Override
     public void run() {
          try {
-             Thread.sleep(Dashboard.dayDuration * 10/24);
+             Thread.sleep(GOTInterface.dayDuration * 10/24);
              
-             Thread.sleep(Dashboard.dayDuration * 14/24);
+             Thread.sleep(GOTInterface.dayDuration * 14/24);
 //             pm.waste = false;
         } catch (InterruptedException ex) {
             Logger.getLogger(AlternatorGOT.class.getName()).log(Level.SEVERE, null, ex);

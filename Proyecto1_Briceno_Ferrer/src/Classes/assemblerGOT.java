@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +89,7 @@ public class assemblerGOT extends Thread {
     public void run() {
         while (!stop) {
             try {
-                Thread.sleep(Math.round(Dashboard.dayDuration / dailyProduction));
+                Thread.sleep(Math.round(GOTInterface.dayDuration / dailyProduction));
 
                 // Hacemos el wait en los semaforos donde adquirimos las cantidades
                 semEnsIntroGOT.acquire(cantIntrosGOT);
@@ -105,44 +105,44 @@ public class assemblerGOT extends Thread {
                 // Actualizamos cantidades
                 // Intros
                 semIntroMutexGOT.acquire(); // Entro en CS de Intro
-                Dashboard.introsProducedGOT -= cantIntrosGOT;
-                Dashboard.qtyIntrosGOT.setText(Integer.toString(Dashboard.introsProducedGOT));
+                GOTInterface.introsProducedGOT -= cantIntrosGOT;
+                GOTInterface.qtyIntrosGOT.setText(Integer.toString(GOTInterface.introsProducedGOT));
                 semIntroMutexGOT.release(); // Salgo de CS de Intro
                 semIntroGOT.release(cantIntrosGOT);
 
                 // Beginnings
                 semBegMutexGOT.acquire(); // Entro en CS de Beginnings
-                Dashboard.begsProducedGOT -= cantBegsGOT;
-                Dashboard.qtyBegsGOT.setText(Integer.toString(Dashboard.begsProducedGOT));
+                GOTInterface.begsProducedGOT -= cantBegsGOT;
+                GOTInterface.qtyBegsGOT.setText(Integer.toString(GOTInterface.begsProducedGOT));
                 semBegMutexGOT.release();
                 semBegGOT.release(cantBegsGOT);
 
                 // Credits
                 semCredMutexGOT.acquire(); // Entro en CS de Endings
-                Dashboard.credsProducedGOT -= cantCredsGOT;
-                Dashboard.qtyProdCredsGOTLabel.setText(Integer.toString(Dashboard.credsProducedGOT));
+                GOTInterface.credsProducedGOT -= cantCredsGOT;
+                GOTInterface.qtyProdCredsGOTLabel.setText(Integer.toString(GOTInterface.credsProducedGOT));
                 semCredMutexGOT.release();
                 semCredGOT.release(cantCredsGOT);
 
                 if (chapterCounter % 5 == 0) { // Si es un episodio multiplo de 5 tocan 2 plot
                     // Plot twists
                     semPlotMutexGOT.acquire();
-                    Dashboard.plotsProducedGOT -= cantPlotsGOT;
-                    Dashboard.qtyProdPlotsGOTLabel.setText(Integer.toString(Dashboard.plotsProducedGOT));
+                    GOTInterface.plotsProducedGOT -= cantPlotsGOT;
+                    GOTInterface.qtyProdPlotsGOTLabel.setText(Integer.toString(GOTInterface.plotsProducedGOT));
                     semPlotMutexGOT.release();
                     semPlotGOT.release(cantPlotsGOT);
                 } else { // Si no es un episodio multiplo de 5 sale 2 endings normales
                     // Endings (cierres)
                     semEndMutexGOT.acquire(); // Entro en CS de Endings
-                    Dashboard.endsProducedGOT -= cantEndsGOT;
-                    Dashboard.qtyEndsGOT.setText(Integer.toString(Dashboard.endsProducedGOT));
+                    GOTInterface.endsProducedGOT -= cantEndsGOT;
+                    GOTInterface.qtyEndsGOT.setText(Integer.toString(GOTInterface.endsProducedGOT));
                     semEndMutexGOT.release();
                     semEndGOT.release(cantEndsGOT);
                 }
                 
                 assemblerMutexGOT.acquire();
-                Dashboard.chaptersProducedGOT ++;
-                Dashboard.chaptersMade.setText(Integer.toString(Dashboard.chaptersProducedGOT));
+                GOTInterface.chaptersProducedGOT ++;
+                GOTInterface.chaptersMade.setText(Integer.toString(GOTInterface.chaptersProducedGOT));
                 chapterCounter++;
                 assemblerMutexGOT.release();
             } catch (InterruptedException ex) {

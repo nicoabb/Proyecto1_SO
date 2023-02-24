@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class prodCredGOT extends Thread {
 
     private Semaphore mutex;
-    private boolean stop = false;
+    private boolean stop;
     private Semaphore semCred;
     private int credsPerDay = 3;
     private Semaphore semEns;
@@ -33,12 +33,12 @@ public class prodCredGOT extends Thread {
         while(!stop) {
                 try {
                     semCred.acquire();
-                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration/ credsPerDay)); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration/ credsPerDay)); // Aqui espera 8 horas (que le toma hacer un credito) y luego 
                     
                     mutex.acquire();
 
-                    Interfaces.Dashboard.credsProducedGOT++;
-                    Interfaces.Dashboard.qtyCredGOT.setText(Integer.toString(Interfaces.Dashboard.credsProducedGOT));
+                    Interfaces.GOTInterface.credsProducedGOT++;
+                    Interfaces.GOTInterface.qtyCredGOT.setText(Integer.toString(Interfaces.GOTInterface.credsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -47,6 +47,10 @@ public class prodCredGOT extends Thread {
                 }
             }
 
+    }
+    
+    public void setStop(boolean stop) {
+        this.stop = stop;
     }
     
 }

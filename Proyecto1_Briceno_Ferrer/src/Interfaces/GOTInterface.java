@@ -26,30 +26,33 @@ import java.util.concurrent.Semaphore;
  *
  * @author Nicolás Briceño
  */
-public class Dashboard extends javax.swing.JFrame {
+public class GOTInterface extends javax.swing.JFrame {
+
     public static boolean start;
     public static int dayDuration; // Duracion de un dia (ms), pasada por el JSON
     public static int hourDuration; // Duracion de una hora (ms)
 
+    public static int freeProds = 0;
+    
     public static int qtyProdIntroGOT, qtyProdBegGOT, qtyProdEndGOT, qtyProdCredGOT, qtyProdPlotGOT;
 
     public static int introDrive, begDrive, endDrive, credDrive, plotDrive;
 
-    public static int cutDuration = 30;
+    public static int cutDuration; // Tiempo entre cortes, sacado del JSON
 
 //  Declarar productores GOT
     private prodIntroGOT prodIntroGOT;
     private prodIntroGOT arrayIntroGOT[];
-    
+
     private prodCredGOT prodCredGOT;
     private prodCredGOT arrayCredGOT[];
-    
+
     private prodBegGOT prodBegGOT;
     private prodBegGOT arrayBegGOT[];
-    
+
     private prodEndGOT prodEndGOT;
     private prodEndGOT arrayEndGOT[];
-    
+
     private prodPlotGOT prodPlotGOT;
     private prodPlotGOT arrayPlotGOT[];
 
@@ -79,7 +82,7 @@ public class Dashboard extends javax.swing.JFrame {
     /**
      * Creates new form Dashboard
      */
-    public Dashboard() {
+    public GOTInterface() {
         initComponents();
         readJson();
     }
@@ -100,32 +103,32 @@ public class Dashboard extends javax.swing.JFrame {
 
             for (Object obj : producersArray) {
                 JSONObject producer = (JSONObject) obj;
-                
-                String category  = (String) producer.get("category");
+
+                String category = (String) producer.get("category");
                 if (category.equals("intro")) {
                     introDrive = ((Long) producer.get("driveGb")).intValue();
                     qtyProdIntroGOT = ((Long) producer.get("amountProducers")).intValue();
-                    Dashboard.qtyProdIntroGOTLabel.setText(Integer.toString(qtyProdIntroGOT));
-                    
+                    GOTInterface.qtyProdIntroGOTLabel.setText(Integer.toString(qtyProdIntroGOT));
+
                 } else if (category.equals("credits")) {
                     credDrive = ((Long) producer.get("driveGb")).intValue();
                     qtyProdCredGOT = ((Long) producer.get("amountProducers")).intValue();;
-                    Dashboard.qtyProdCredsGOTLabel.setText(Integer.toString(qtyProdCredGOT));
-                    
+                    GOTInterface.qtyProdCredsGOTLabel.setText(Integer.toString(qtyProdCredGOT));
+
                 } else if (category.equals("beginning")) {
                     begDrive = ((Long) producer.get("driveGb")).intValue();
                     qtyProdBegGOT = ((Long) producer.get("amountProducers")).intValue();
-                    Dashboard.qtyProdBegGOTLabel.setText(Integer.toString(qtyProdBegGOT));
-                    
+                    GOTInterface.qtyProdBegGOTLabel.setText(Integer.toString(qtyProdBegGOT));
+
                 } else if (category.equals("ending")) {
                     endDrive = ((Long) producer.get("driveGb")).intValue();
                     qtyProdEndGOT = ((Long) producer.get("amountProducers")).intValue();
-                    Dashboard.qtyProdEndGOTLabel.setText(Integer.toString(qtyProdEndGOT));
-                    
+                    GOTInterface.qtyProdEndGOTLabel.setText(Integer.toString(qtyProdEndGOT));
+
                 } else if (category.equals("plottwist")) {
                     plotDrive = ((Long) producer.get("driveGb")).intValue();
                     qtyProdPlotGOT = ((Long) producer.get("amountProducers")).intValue();
-                    Dashboard.qtyProdPlotsGOTLabel.setText(Integer.toString(qtyProdPlotGOT));
+                    GOTInterface.qtyProdPlotsGOTLabel.setText(Integer.toString(qtyProdPlotGOT));
                 }
             }
 
@@ -139,15 +142,15 @@ public class Dashboard extends javax.swing.JFrame {
         this.semIntroGOT = new Semaphore(introDrive);
         this.semIntroMutexGOT = new Semaphore(1);
         this.semEnsIntroGOT = new Semaphore(0);
-        
-        this.arrayIntroGOT = new prodIntroGOT[qtyProdIntroGOT];
+
+        this.arrayIntroGOT = new prodIntroGOT[19];
 
         //Instanciar al productor de creditos
         this.semCredGOT = new Semaphore(credDrive);
         this.semCredMutexGOT = new Semaphore(1);
         this.semEnsCredGOT = new Semaphore(0);
-        
-        this.arrayCredGOT = new prodCredGOT[qtyProdCredGOT];
+
+        this.arrayCredGOT = new prodCredGOT[19];
 //        this.prodCredGOT = new prodCredGOT(semCredMutexGOT, semCredGOT, semEnsCredGOT);
 //        this.prodCredGOT.start();
 
@@ -155,8 +158,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.semBegGOT = new Semaphore(begDrive);
         this.semBegMutexGOT = new Semaphore(1);
         this.semEnsBegGOT = new Semaphore(0);
-        
-        this.arrayBegGOT = new prodBegGOT[qtyProdBegGOT];
+
+        this.arrayBegGOT = new prodBegGOT[19];
 //        this.prodBegGOT = new prodBegGOT(semBegMutexGOT, semBegGOT, semEnsBegGOT);
 //        this.prodBegGOT.start();
 
@@ -164,8 +167,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.semEndGOT = new Semaphore(endDrive);
         this.semEndMutexGOT = new Semaphore(1);
         this.semEnsEndGOT = new Semaphore(0);
-        
-        this.arrayEndGOT = new prodEndGOT[qtyProdEndGOT];
+
+        this.arrayEndGOT = new prodEndGOT[19];
 //        this.prodEndGOT = new prodEndGOT(semEndMutexGOT, semEndGOT, semEnsEndGOT);
 //        this.prodEndGOT.start();
 
@@ -173,13 +176,11 @@ public class Dashboard extends javax.swing.JFrame {
         this.semPlotGOT = new Semaphore(plotDrive);
         this.semPlotMutexGOT = new Semaphore(1);
         this.semEnsPlotGOT = new Semaphore(0);
-        
-        this.arrayPlotGOT = new prodPlotGOT[qtyProdPlotGOT];
+
+        this.arrayPlotGOT = new prodPlotGOT[19];
 //        this.prodPlotGOT = new prodPlotGOT(semPlotMutexGOT, semPlotGOT, semEnsPlotGOT);
 //        this.prodPlotGOT.start();
 
-
-    
     }
 
     /**
@@ -218,7 +219,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         popProdEndGOT = new javax.swing.JButton();
         qtyProdEndGOTLabel = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        pushProdEndGOT = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         popProdPlotGOT = new javax.swing.JButton();
         qtyPlotsGOT = new javax.swing.JLabel();
@@ -226,7 +227,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         popProdCredGOT = new javax.swing.JButton();
         qtyCredGOT = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        pushProdCredGOT = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         freeProdsGOTLabel = new javax.swing.JLabel();
         startButton = new javax.swing.JButton();
@@ -248,7 +249,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel2.setText("Dias para el corte");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
-        jLabel3.setText("Game of Thrones");
+        jLabel3.setText("Game of Thrones - Emilio Ferrer");
 
         popIntroProdGOT.setText("-");
         popIntroProdGOT.addActionListener(new java.awt.event.ActionListener() {
@@ -258,6 +259,11 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         pushIntroProdGOT.setText("+");
+        pushIntroProdGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pushIntroProdGOTActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Introducciones");
 
@@ -274,12 +280,27 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         pushProdBegGOT.setText("+");
+        pushProdBegGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pushProdBegGOTActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Cierres");
 
         popProdEndGOT.setText("-");
+        popProdEndGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popProdEndGOTActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("+");
+        pushProdEndGOT.setText("+");
+        pushProdEndGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pushProdEndGOTActionPerformed(evt);
+            }
+        });
 
         jLabel13.setText("Plot twists");
 
@@ -291,12 +312,27 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         pushProdPlotGOT.setText("+");
+        pushProdPlotGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pushProdPlotGOTActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Créditos");
 
         popProdCredGOT.setText("-");
+        popProdCredGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popProdCredGOTActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("+");
+        pushProdCredGOT.setText("+");
+        pushProdCredGOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pushProdCredGOTActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("Directores desocupados");
 
@@ -314,7 +350,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 275, Short.MAX_VALUE)
+                        .addGap(57, 107, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addGap(269, 269, 269))
                     .addGroup(layout.createSequentialGroup()
@@ -359,9 +395,9 @@ public class Dashboard extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(pushIntroProdGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(pushProdBegGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(pushProdEndGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(pushProdPlotGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton3))
+                                            .addComponent(pushProdCredGOT))
                                         .addGap(115, 115, 115))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(45, 45, 45)
@@ -432,7 +468,7 @@ public class Dashboard extends javax.swing.JFrame {
                             .addComponent(jLabel12)
                             .addComponent(popProdEndGOT)
                             .addComponent(qtyProdEndGOTLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(pushProdEndGOT))
                         .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -449,7 +485,7 @@ public class Dashboard extends javax.swing.JFrame {
                                     .addComponent(qtyProdPlotsGOTLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(pushProdCredGOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(qtyProdCredsGOTLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -490,93 +526,218 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(246, 246, 246))
         );
 
+        freeProdsGOTLabel.setText(Integer.toString(freeProds));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void popIntroProdGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popIntroProdGOTActionPerformed
-        if(start){
-            System.out.println("hola");
-                int x = 0;
-                
-                while (arrayIntroGOT[x] == null){
-                    if(x == arrayIntroGOT.length - 1){
-//                        fireDirector();
-                        break;
-                        
-                    }
-                    
-                    x++;
-                }
-                arrayIntroGOT[x].setStop();
+        if (this.arrayIntroGOT != null) {
+            if (Integer.parseInt(this.qtyProdIntroGOTLabel.getText()) > 0) {
                 qtyProdIntroGOT--;
-                Dashboard.qtyProdIntroGOTLabel.setText(Integer.toString(qtyProdIntroGOT));
-                
-                
-                
+                qtyProdIntroGOTLabel.setText(Integer.toString(qtyProdIntroGOT));
+                freeProds++;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+                if (this.start) {
+                    this.arrayIntroGOT[qtyProdIntroGOT].setStop(true);
+                }
+            }
+
         }
-        
+
     }//GEN-LAST:event_popIntroProdGOTActionPerformed
 
     private void popProdBegGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popProdBegGOTActionPerformed
-        // TODO add your handling code here:
+        if (this.arrayBegGOT != null) {
+            if (Integer.parseInt(this.qtyProdBegGOTLabel.getText()) > 0) {
+                qtyProdBegGOT--;
+                qtyProdBegGOTLabel.setText(Integer.toString(qtyProdBegGOT));
+                freeProds++;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+                if (this.start) {
+                    this.arrayBegGOT[qtyProdBegGOT].setStop(true);
+                }
+            }
+
+        }
     }//GEN-LAST:event_popProdBegGOTActionPerformed
 
     private void popProdPlotGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popProdPlotGOTActionPerformed
-        // TODO add your handling code here:
+        if (this.arrayPlotGOT != null) {
+            if (Integer.parseInt(this.qtyProdPlotsGOTLabel.getText()) > 0) {
+                qtyProdPlotGOT--;
+                qtyProdPlotsGOTLabel.setText(Integer.toString(qtyProdPlotGOT));
+                freeProds++;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+                if (this.start) {
+                    this.arrayPlotGOT[qtyProdPlotGOT].setStop(true);
+                }
+            }
+
+        }
     }//GEN-LAST:event_popProdPlotGOTActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        if(!this.start) {
+        if (!this.start) {
             start = true;
-            
+
             // Llenar arrays de productores
             // Intros
             for (int i = 0; i < qtyProdIntroGOT; i++) {
                 this.arrayIntroGOT[i] = new prodIntroGOT(semIntroMutexGOT, semIntroGOT, semEnsIntroGOT);
                 this.arrayIntroGOT[i].start();
             }
-            
+
             // Beginnings
             for (int i = 0; i < qtyProdBegGOT; i++) {
                 this.arrayBegGOT[i] = new prodBegGOT(semBegMutexGOT, semBegGOT, semEnsBegGOT);
                 this.arrayBegGOT[i].start();
             }
-            
+
             // Endings
             for (int i = 0; i < qtyProdEndGOT; i++) {
                 this.arrayEndGOT[i] = new prodEndGOT(semEndMutexGOT, semEndGOT, semEnsEndGOT);
                 this.arrayEndGOT[i].start();
             }
-            
+
             // Credits
             for (int i = 0; i < qtyProdCredGOT; i++) {
                 this.arrayCredGOT[i] = new prodCredGOT(semCredMutexGOT, semCredGOT, semEnsCredGOT);
                 this.arrayCredGOT[i].start();
             }
-            
+
             // Plot twists
             for (int i = 0; i < qtyProdPlotGOT; i++) {
                 this.arrayPlotGOT[i] = new prodPlotGOT(semPlotMutexGOT, semPlotGOT, semEnsPlotGOT);
                 this.arrayPlotGOT[i].start();
             }
-            
-            
-        //Instanciar al ensamblador
-        this.semAssemblerMutexGOT = new Semaphore(1);
-        this.assemblerGOT = new assemblerGOT(semAssemblerMutexGOT, semIntroGOT, semIntroMutexGOT, semEnsIntroGOT, semBegGOT, semBegMutexGOT, semEnsBegGOT, semEndGOT, semEndMutexGOT, semEnsEndGOT, semCredGOT, semCredMutexGOT, semEnsCredGOT, semPlotGOT, semPlotMutexGOT, semEnsPlotGOT);
-        this.assemblerGOT.start();
 
-        //Instanciar el PM
-        this.counterGOT = new Semaphore(cutDuration);
-        this.counterMutexGOT = new Semaphore(1);
-        this.pmGOT = new ProjectManagerGOT(counterGOT, counterMutexGOT);
-        this.pmGOT.start();
+            //Instanciar al ensamblador
+            this.semAssemblerMutexGOT = new Semaphore(1);
+            this.assemblerGOT = new assemblerGOT(semAssemblerMutexGOT, semIntroGOT, semIntroMutexGOT, semEnsIntroGOT, semBegGOT, semBegMutexGOT, semEnsBegGOT, semEndGOT, semEndMutexGOT, semEnsEndGOT, semCredGOT, semCredMutexGOT, semEnsCredGOT, semPlotGOT, semPlotMutexGOT, semEnsPlotGOT);
+            this.assemblerGOT.start();
 
-        //Instanciar el director
-        this.directorGOT = new directorGOT(pmGOT, counterGOT, counterMutexGOT);
-        this.directorGOT.start();
+            //Instanciar el PM
+            this.counterGOT = new Semaphore(cutDuration);
+            this.counterMutexGOT = new Semaphore(1);
+            this.pmGOT = new ProjectManagerGOT(counterGOT, counterMutexGOT);
+            this.pmGOT.start();
+
+            //Instanciar el director
+            this.directorGOT = new directorGOT(pmGOT, counterGOT, counterMutexGOT);
+            this.directorGOT.start();
         }
     }//GEN-LAST:event_startButtonActionPerformed
+
+    private void pushIntroProdGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pushIntroProdGOTActionPerformed
+        if(this.arrayIntroGOT != null){
+            if(freeProds > 0){
+                
+                arrayIntroGOT[qtyProdIntroGOT] = new prodIntroGOT(semIntroMutexGOT, semIntroGOT, semEnsIntroGOT);
+                qtyProdIntroGOT++;
+                this.qtyProdIntroGOTLabel.setText(Integer.toString(qtyProdIntroGOT));
+                if (this.start) {
+                    this.arrayIntroGOT[qtyProdIntroGOT - 1].start();
+                }
+                freeProds--;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+            }
+        }
+    }//GEN-LAST:event_pushIntroProdGOTActionPerformed
+
+    private void pushProdBegGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pushProdBegGOTActionPerformed
+        if(this.arrayBegGOT != null){
+            if(freeProds > 0){
+                
+                arrayBegGOT[qtyProdBegGOT] = new prodBegGOT(semBegMutexGOT, semBegGOT, semEnsBegGOT);
+                qtyProdBegGOT++;
+                this.qtyProdBegGOTLabel.setText(Integer.toString(qtyProdBegGOT));
+                if (this.start) {
+                    this.arrayBegGOT[qtyProdBegGOT - 1].start();
+                }
+                freeProds--;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+            }
+        }
+    }//GEN-LAST:event_pushProdBegGOTActionPerformed
+
+    private void popProdEndGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popProdEndGOTActionPerformed
+        if (this.arrayEndGOT != null) {
+            if (Integer.parseInt(qtyProdEndGOTLabel.getText()) > 0) {
+                qtyProdEndGOT--;
+                qtyProdEndGOTLabel.setText(Integer.toString(qtyProdEndGOT));
+                freeProds++;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+                if (this.start) {
+                    this.arrayEndGOT[qtyProdEndGOT].setStop(true);
+                }
+            }
+
+        }
+    }//GEN-LAST:event_popProdEndGOTActionPerformed
+
+    private void pushProdEndGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pushProdEndGOTActionPerformed
+        if(this.arrayEndGOT != null){
+            if(freeProds > 0){
+                
+                arrayEndGOT[qtyProdEndGOT] = new prodEndGOT(semEndMutexGOT, semEndGOT, semEnsEndGOT);
+                qtyProdEndGOT++;
+                this.qtyProdEndGOTLabel.setText(Integer.toString(qtyProdEndGOT));
+                if (this.start) {
+                    this.arrayEndGOT[qtyProdEndGOT - 1].start();
+                }
+                freeProds--;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+            }
+        }
+    }//GEN-LAST:event_pushProdEndGOTActionPerformed
+
+    private void pushProdPlotGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pushProdPlotGOTActionPerformed
+        if(this.arrayPlotGOT != null){
+            if(freeProds > 0){
+                
+                arrayPlotGOT[qtyProdPlotGOT] = new prodPlotGOT(semPlotMutexGOT, semPlotGOT, semEnsPlotGOT);
+                qtyProdPlotGOT++;
+                this.qtyProdPlotsGOTLabel.setText(Integer.toString(qtyProdPlotGOT));
+                if (this.start) {
+                    this.arrayPlotGOT[qtyProdPlotGOT - 1].start();
+                }
+                freeProds--;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+            }
+        }
+    }//GEN-LAST:event_pushProdPlotGOTActionPerformed
+
+    private void popProdCredGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popProdCredGOTActionPerformed
+        if (this.arrayCredGOT != null) {
+            if (Integer.parseInt(qtyProdCredsGOTLabel.getText()) > 0) {
+                qtyProdCredGOT--;
+                qtyProdCredsGOTLabel.setText(Integer.toString(qtyProdCredGOT));
+                freeProds++;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+                if (this.start) {
+                    this.arrayCredGOT[qtyProdCredGOT].setStop(true);
+                }
+            }
+
+        }
+    }//GEN-LAST:event_popProdCredGOTActionPerformed
+
+    private void pushProdCredGOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pushProdCredGOTActionPerformed
+        if(this.arrayCredGOT != null){
+            if(freeProds > 0){
+                
+                arrayCredGOT[qtyProdCredGOT] = new prodCredGOT(semCredMutexGOT, semCredGOT, semEnsCredGOT);
+                qtyProdCredGOT++;
+                this.qtyProdCredsGOTLabel.setText(Integer.toString(qtyProdCredGOT));
+                if (this.start) {
+                    this.arrayCredGOT[qtyProdCredGOT - 1].start();
+                }
+                freeProds--;
+                freeProdsGOTLabel.setText(Integer.toString(freeProds));
+            }
+        }
+    }//GEN-LAST:event_pushProdCredGOTActionPerformed
 
     /**
      * @param args the command line arguments
@@ -595,20 +756,21 @@ public class Dashboard extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GOTInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GOTInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GOTInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GOTInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Dashboard().setVisible(true);
+                new GOTInterface().setVisible(true);
             }
         });
     }
@@ -617,8 +779,6 @@ public class Dashboard extends javax.swing.JFrame {
     public static javax.swing.JLabel chaptersMade;
     public static javax.swing.JLabel daysUntilCut;
     public static javax.swing.JLabel freeProdsGOTLabel;
-    public static javax.swing.JButton jButton2;
-    public static javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -641,6 +801,8 @@ public class Dashboard extends javax.swing.JFrame {
     public static javax.swing.JButton popProdPlotGOT;
     public static javax.swing.JButton pushIntroProdGOT;
     public static javax.swing.JButton pushProdBegGOT;
+    public static javax.swing.JButton pushProdCredGOT;
+    public static javax.swing.JButton pushProdEndGOT;
     public static javax.swing.JButton pushProdPlotGOT;
     public static javax.swing.JLabel qtyBegsGOT;
     public static javax.swing.JLabel qtyCredGOT;

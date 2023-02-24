@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ public class directorGOT extends Thread {
         while (true) {
             try {
 //                cicle = true;
-                double guardLength = (Math.random() * (Dashboard.dayDuration * 0.75 - Dashboard.dayDuration / 2)) + Dashboard.dayDuration / 2;
+                double guardLength = (Math.random() * (GOTInterface.dayDuration * 0.75 - GOTInterface.dayDuration / 2)) + GOTInterface.dayDuration / 2;
 //                counterMutex.acquire(); // Trata de agarrar exclusividad sobre el semaforo del contador
 //                if (counter.availablePermits() == 0) {
 //                    counter.release(30);
@@ -43,7 +43,7 @@ public class directorGOT extends Thread {
                 double startTime = System.currentTimeMillis();
                 while (elapsedTime < guardLength) {
 
-                    double timeBetweenCheck = Math.random() * ((1.5 * Dashboard.hourDuration) - (0.5 * Dashboard.hourDuration)) + 0.5 * Dashboard.hourDuration;
+                    double timeBetweenCheck = Math.random() * ((1.5 * GOTInterface.hourDuration) - (0.5 * GOTInterface.hourDuration)) + 0.5 * GOTInterface.hourDuration;
                     Thread.sleep(Math.round(timeBetweenCheck));
                     // Aqui va y ve qué está haciendo el PM
 //                    System.out.println("Revisando...");
@@ -53,9 +53,9 @@ public class directorGOT extends Thread {
                     elapsedTime = System.currentTimeMillis() - startTime;
 
                 }
-                System.out.println("descansando");
+//                System.out.println("descansando");
 
-                Thread.sleep((Dashboard.dayDuration - Math.round(guardLength)));
+                Thread.sleep((GOTInterface.dayDuration - Math.round(guardLength)));
 //                System.out.println("ahora a repetir el ciclo");
             } catch (InterruptedException ex) {
                 Logger.getLogger(directorGOT.class.getName()).log(Level.SEVERE, null, ex);

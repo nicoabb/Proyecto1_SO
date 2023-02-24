@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class prodBegGOT extends Thread {
 
     private Semaphore mutex;
-    private boolean stop = false;
+    private boolean stop;
     private Semaphore semBeg;
     private double begsPerDay = 0.25;
     private Semaphore semEns;
@@ -33,12 +33,12 @@ public class prodBegGOT extends Thread {
         while(!stop) {
                 try {
                     semBeg.acquire();
-                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / begsPerDay)); // Aqui espera 4 dias (que le toma hacer un inicio)
                     
                     mutex.acquire();
 
-                    Interfaces.Dashboard.begsProducedGOT++;
-                    Interfaces.Dashboard.qtyBegsGOT.setText(Integer.toString(Interfaces.Dashboard.begsProducedGOT));
+                    Interfaces.GOTInterface.begsProducedGOT++;
+                    Interfaces.GOTInterface.qtyBegsGOT.setText(Integer.toString(Interfaces.GOTInterface.begsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -47,6 +47,10 @@ public class prodBegGOT extends Thread {
                 }
             }
 
+    }
+    
+    public void setStop (boolean stop) {
+        this.stop = stop;
     }
     
 }

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class prodPlotGOT extends Thread {
 
     private Semaphore mutex;
-    private boolean stop = false;
+    private boolean stop;
     private Semaphore semPlot;
     private double plotsPerDay = 0.33333;
     private Semaphore semEns;
@@ -33,11 +33,11 @@ public class prodPlotGOT extends Thread {
                 try {
                     semPlot.acquire();
                     
-                    Thread.sleep(Math.round(Interfaces.Dashboard.dayDuration / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
+                    Thread.sleep(Math.round(Interfaces.GOTInterface.dayDuration / plotsPerDay)); // Aqui espera 3 dias (que le toma hacer un plot twist) y luego entra en mutex y actualiza el valor
                     mutex.acquire();
 
-                    Interfaces.Dashboard.plotsProducedGOT++;
-                    Interfaces.Dashboard.qtyPlotsGOT.setText(Integer.toString(Interfaces.Dashboard.plotsProducedGOT));
+                    Interfaces.GOTInterface.plotsProducedGOT++;
+                    Interfaces.GOTInterface.qtyPlotsGOT.setText(Integer.toString(Interfaces.GOTInterface.plotsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -46,6 +46,10 @@ public class prodPlotGOT extends Thread {
                 }
             }
 
+    }
+    
+    public void setStop(boolean stop) {
+        this.stop = stop;
     }
     
 }

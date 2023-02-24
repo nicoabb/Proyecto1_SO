@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import Interfaces.Dashboard;
+import Interfaces.GOTInterface;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,12 +35,12 @@ public class prodIntroGOT extends Thread {
 //                    System.out.println(count);
                     semIntro.acquire();
 //                    System.out.println("A esperar");
-                    Thread.sleep(Math.round(Dashboard.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
+                    Thread.sleep(Math.round(GOTInterface.dayDuration / introsPerDay)); // Aqui espera 8 horas (que le toma hacer una intro)
                     
                     mutex.acquire();
                     
-                    Dashboard.introsProducedGOT++;
-                    Dashboard.qtyIntrosGOT.setText(Integer.toString(Dashboard.introsProducedGOT));
+                    GOTInterface.introsProducedGOT++;
+                    GOTInterface.qtyIntrosGOT.setText(Integer.toString(GOTInterface.introsProducedGOT));
                     
                     mutex.release();
                     semEns.release();
@@ -52,8 +52,8 @@ public class prodIntroGOT extends Thread {
 
     }
     
-    public void setStop() {
-        stop = !stop;
+    public void setStop(boolean stop) {
+        this.stop = stop;
     }
     
 }
